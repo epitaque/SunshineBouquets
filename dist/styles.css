@@ -1,0 +1,127 @@
+
+.grid-hero {
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    position: relative;
+}
+
+.router-link-active {
+    font-weight:bold
+}
+.bar {
+    height: 15px;
+    width: 100%;
+    background-color: #58A62B !important;
+}
+.darkgreen {
+    color: #435F0B !important;
+}
+
+.filters {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.crop {
+    height: 100px;
+    overflow: hidden;
+}
+.productroot {
+	float: left;
+	padding-bottom: .8rem;
+	text-align: left;
+}
+.toprow {
+	display: block;
+}
+.toprow h4 {
+	display: inline;
+}
+.toprow button, .toprow p {
+	float: right;
+}
+.collection {
+	font-size: 12px;
+}
+.side-image {
+	max-width: 90%;
+	max-height: 90%;
+	width: auto;
+	height: auto;
+	margin: auto;
+}
+
+.new-tag {
+	/*background: transparent;
+	border: 0;
+	color: #777;
+	font-size: 13px;
+	font-weight: 400;
+	margin-bottom: 6px;
+	margin-top: 1px;
+	outline: none;
+	padding: 4px;
+	padding-left: 0;*/
+	width: 80px !important;
+}
+
+.root {
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+
+	margin-top: 10px;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.picture-input[data-v-206762e8] {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.preview-container[data-v-206762e8] {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  cursor: pointer;
+  overflow: hidden;
+}
+.picture-preview[data-v-206762e8] {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10001;
+  box-sizing: border-box;
+  background-color: rgba(200,200,200,.25);
+}
+.picture-preview.dragging-over[data-v-206762e8] {
+  filter: brightness(0.5);
+}
+.picture-inner[data-v-206762e8] {
+  position: relative;
+  z-index: 10002;
+  pointer-events: none;
+  box-sizing: border-box;
+  margin: 1em auto;
+  padding: 0.5em;
+  border: .3em dashed rgba(66,66,66,.15);
+  border-radius: 8px;
+  width: calc(100% - 2.5em);
+  height: calc(100% - 2.5em);
+  display: table;
+}
+.picture-inner .picture-inner-text[data-v-206762e8] {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 2em;
+  line-height: 1.5;
+}
+button[data-v-206762e8] {
+  margin: 1em .25em;
+  cursor: pointer;
+}
+input[type=file][data-v-206762e8] {
+  display: none;
+}
