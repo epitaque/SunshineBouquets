@@ -25445,6 +25445,7 @@ if (false) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_AddBouquet_vue__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_AddBouquet_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_AddBouquet_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_fbb0bdaa_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_AddBouquet_vue__ = __webpack_require__(58);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
@@ -25461,7 +25462,7 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_AddBouquet_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_AddBouquet_vue__["default"],
   __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_fbb0bdaa_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_AddBouquet_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
@@ -25492,151 +25493,9 @@ if (false) {(function () {
 
 /***/ }),
 /* 54 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_picture_input__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InputTag__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Bouquets__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Bouquets___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__services_Bouquets__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  components: {
-    PictureInput: __WEBPACK_IMPORTED_MODULE_0_vue_picture_input__["a" /* default */],
-    InputTag: __WEBPACK_IMPORTED_MODULE_1__InputTag__["a" /* default */]
-  },
-
-  data() {
-    return {
-      name: '',
-      image: null,
-      msrpIds: [],
-      packSize: 1,
-      collectionsArray: [],
-      tagsArray: [],
-      formHasErrors: false,
-      success: false,
-      submitError: '',
-      submitting: false
-    };
-  },
-
-  methods: {
-    onPictureChange() {
-      console.log('New picture selected!');
-
-      if (this.$refs.pictureInput.image) {
-        this.image = this.$refs.pictureInput.file;
-        console.log('Picture loaded.');
-      } else {
-        console.log('FileReader API not supported: use the <form>, Luke!');
-      }
-    },
-
-    onCollectionsChange() {},
-
-    validateBeforeSubmit() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          this.submit();
-          return;
-        }
-
-        this.formHasErrors = true;
-      });
-    },
-
-    submit() {
-      this.submitting = true;
-      __WEBPACK_IMPORTED_MODULE_2__services_Bouquets___default.a.addBouquet({
-        name: this.name,
-        image: this.image,
-        price: this.price,
-        packSize: this.packSize,
-        collections: this.collectionsArray,
-        tags: this.tagsArray
-      }).then(res => {
-        console.log("BouquetService.addBouquet request");
-        this.submitting = false;
-        this.success = true;
-        this.$store.dispatch('updateBouquets').then(_ => {
-          console.log("Successfully dispatched updateBouquets action");
-          this.$router.push('/bouquets/' + res);
-        });
-      }).catch(err => {
-        this.submitting = false;
-        this.submitError = err;
-      });
-    }
-
-  },
-  computed: {
-    uniqueTags() {
-      return this.$store.state.uniqueTags;
-    },
-
-    uniqueCollections() {
-      return this.$store.state.uniqueCollections;
-    }
-
-  }
-});
+throw new Error("Module build failed: SyntaxError: C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\client\\components\\Bouquets\\AddBouquet.vue: Unexpected token, expected \",\" (80:9)\n  78 | \t},\n  79 | \tcreated: {\n> 80 | \t\tmsrpIds.push()\n     | \t\t       ^\n  81 | \t},\n  82 | \tmethods: {\n  83 | \t\tonPictureChange() {\n    at Parser.raise (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:830:15)\n    at Parser.unexpected (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2210:16)\n    at Parser.expect (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2196:28)\n    at Parser.parseObj (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3649:14)\n    at Parser.parseExprAtom (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3308:21)\n    at Parser.parseExprSubscripts (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2970:21)\n    at Parser.parseMaybeUnary (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2948:21)\n    at Parser.parseExprOps (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2853:21)\n    at Parser.parseMaybeConditional (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2823:21)\n    at Parser.parseMaybeAssign (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2779:21)\n    at Parser.parseObjectProperty (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3815:101)\n    at Parser.parseObjPropValue (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3840:86)\n    at Parser.parseObj (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3739:12)\n    at Parser.parseExprAtom (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:3308:21)\n    at Parser.parseExprSubscripts (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2970:21)\n    at Parser.parseMaybeUnary (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2948:21)\n    at Parser.parseExprOps (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2853:21)\n    at Parser.parseMaybeConditional (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2823:21)\n    at Parser.parseMaybeAssign (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:2779:21)\n    at Parser.parseExport (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:5291:21)\n    at Parser.parseStatementContent (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:4289:27)\n    at Parser.parseStatement (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:4204:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:4760:23)\n    at Parser.parseBlockBody (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:4746:10)\n    at Parser.parseTopLevel (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:4172:10)\n    at Parser.parse (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:5608:17)\n    at parse (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\babylon\\lib\\index.js:10527:38)\n    at parser (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\@babel\\core\\lib\\transformation\\normalize-file.js:104:33)\n    at normalizeFile (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\@babel\\core\\lib\\transformation\\normalize-file.js:51:11)\n    at runSync (C:\\Users\\Brian\\Projects\\Vue\\LaurasWebsiteFromScratch\\node_modules\\@babel\\core\\lib\\transformation\\index.js:34:41)");
 
 /***/ }),
 /* 55 */
@@ -29122,6 +28981,8 @@ exports.updateCartNote = exports.setBouquets = exports.removeMsrpIdFromCart = ex
 
 var _vue = _interopRequireDefault(__webpack_require__(1));
 
+var _getters = __webpack_require__(66);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var setUser = function setUser(state, user) {
@@ -29143,12 +29004,16 @@ exports.addMsrpId = addMsrpId;
 
 var addTempMsrp = function addTempMsrp(state) {
   var msrpId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Math.round(Math.random() * 1000000);
-  tempMsrps[msrpId] = {};
+  _getters.tempMsrps[msrpId] = {};
   return msrpId;
 };
 
 exports.addTempMsrp = addTempMsrp;
-var removeTempMsrp = (state, msrp);
+
+var removeTempMsrp = function removeTempMsrp(state, msrpId) {
+  delete _getters.tempMsrps[msrpId];
+};
+
 exports.removeTempMsrp = removeTempMsrp;
 
 var addMsrpIdToCart = function addMsrpIdToCart(state, bouquetId) {

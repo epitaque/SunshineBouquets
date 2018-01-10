@@ -76,6 +76,9 @@ export default {
 			submitting: false
 		};
 	},
+	created: {
+		msrpIds.push()
+	},
 	methods: {
 		onPictureChange() {
 			console.log('New picture selected!')

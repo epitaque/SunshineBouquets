@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { tempMsrps } from './getters';
 
 export const setUser = (state, user) => {
 	Vue.set(state, 'user', user);
@@ -18,7 +19,9 @@ export const addTempMsrp = (state, msrpId = Math.round(Math.random() * 1000000))
 	return msrpId;
 }
 
-export const removeTempMsrp = (state, msrp)
+export const removeTempMsrp = (state, msrpId) => {
+	delete tempMsrps[msrpId];
+}
 
 export const addMsrpIdToCart = (state, bouquetId) => {
 	Vue.set(state.msrps[msrpId], 'inCart', true);
