@@ -2,11 +2,11 @@
     <div>
         <header class="navbar">
             <section class="navbar-section">
-                <img width="150" src="/resource/logo.png"></img>
+                <img width="150" src="/resource/logo.png">
             </section>
 			<section class="navbar-section">
 				<router-link to="/collections" class="btn btn-link darkgreen">Collections</router-link>
-                <router-link to="/products" class="darkgreen btn btn-link">Products</router-link>
+                <router-link to="/bouquets" class="darkgreen btn btn-link">Bouquets</router-link>
                 <div v-show="!isLoggedIn">
 					<router-link to="/login" class="btn btn-link darkgreen">Login</router-link>
 					<router-link to="/register" class="btn btn-link darkgreen">Register</router-link>    

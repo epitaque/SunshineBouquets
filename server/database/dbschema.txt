@@ -13,10 +13,9 @@ CREATE TABLE bouquets (
 	name varchar(50),
 	description varchar(500),
 	image varchar(50),
-	packSize int(8),
 	collections varchar(500),
 	tags varchar(500),
-	dateadded datetime NOT NULL,
+	date_added datetime NOT NULL,
 
 	PRIMARY KEY(bouquet_id)
 );
@@ -27,9 +26,11 @@ CREATE TABLE msrps (
 	image varchar(50),
 	name varchar(50),
 	price decimal(10,2),
+	stems int(11),
+	date_added datetime NOT NULL,
 
 	PRIMARY KEY(msrp_id),
-	FOREIGN KEY(bouquet_id)
+	FOREIGN KEY(bouquet_id) REFERENCES bouquets(bouquet_id)
 )
 
 CREATE TABLE collections (
@@ -39,6 +40,7 @@ CREATE TABLE collections (
 	bouquets varchar(500),
 	dateadded datetime NOT NULL,
 	banner_image varchar(50) NOT NULL,
+	date_added datetime NOT NULL,
 
 	PRIMARY KEY(collection_id)
 );

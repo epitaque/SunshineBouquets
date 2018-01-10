@@ -1,6 +1,6 @@
 <template>
 	<div style="margin-top: 20px;" class="text-left col-mx-auto column col-6 col-xs-12">
-		<h3>Add Product</h3>
+		<h3>Edit Bouquet</h3>
 		<form @submit.prevent="validateBeforeSubmit">
 			<div class="form-group">
 				<label class="form-label" for="s_name">Name</label>
@@ -9,15 +9,18 @@
 			<p v-show="errors.has('name')" class="form-input-hint text-error">{{ errors.first('name') }}</p>
 			<div class="form-group">
 				<label class="form-label">Photo</label>
-				<picture-input 
+				<picture-input
+					v-if="loaded != null && loaded" 
 					ref="pictureInput" 
-					@change="onPictureChange" 
+					@change="onPictureChange"
+					@remove="onPictureRemoved"
 					width="200" 
 					height="200" 
 					margin="16"
 					:removable="true"
 					accept="image/jpeg,image/png" 
-					size="15" 
+					size="15"
+					:prefill="bouquet.image"
 					buttonClass="btn">
 				</picture-input>
 			</div>
@@ -47,11 +50,11 @@
 				<input-tag :tags="tagsArray" :autocompletes="uniqueTags"></input-tag>
 			</div>
 
-            <p v-show="formHasErrors" class="form-input-hint text-error">Please fix errors before trying to add a product.</p>
+            <p v-show="formHasErrors" class="form-input-hint text-error">Please fix errors before trying to edit a bouquet.</p>
 
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary">
-					Add Product
+					Save Edit
 				</button>
 			</div>
 
@@ -63,7 +66,7 @@
 <script>
 import PictureInput from 'vue-picture-input'
 import InputTag from './InputTag'
-import ProductService from '../../services/Products';
+import BouquetService from '../../services/Bouquets';
 
 export default {
 	components: {
@@ -81,21 +84,27 @@ export default {
 			formHasErrors: false,
 			success: false,
 			submitError: '',
-			submitting: false
+			submitting: false,
+			bouquetId: this.$route.params.id,
+			pictureChanged: false,
+			pictureRemoved: false,
+			loaded: true,
 		};
 	},
 	methods: {
 		onPictureChange() {
 			console.log('New picture selected!')
 			if (this.$refs.pictureInput.image) {
+				this.pictureRemoved = false;
+				this.pictureChanged = true;
 				this.image = this.$refs.pictureInput.file;
 				console.log('Picture loaded.')
 			} else {
 				console.log('FileReader API not supported: use the <form>, Luke!')
 			}
 		},
-		onCollectionsChange() {
-
+		onPictureRemoved() {
+			this.pictureRemoved = true;
 		},
 		validateBeforeSubmit() {
 			this.$validator.validateAll().then((result) => {
@@ -108,20 +117,25 @@ export default {
 		},
 		submit() {
 			this.submitting = true;
-			ProductService.addProduct({
+
+			BouquetService.editBouquet({
 				name: this.name,
 				image: this.image,
 				price: this.price,
 				packSize: this.packSize,
 				collections: this.collectionsArray,
 				tags: this.tagsArray,
+				pictureChanged: this.pictureChanged,
+				pictureRemoved: this.pictureRemoved,
+				id: this.bouquetId
 			}).then(res => {
-				console.log("ProductService.addProduct request");
+				console.log("BouquetService.editBouquet request with image " + this.image);
 				this.submitting = false;
 				this.success = true;
-				this.$store.dispatch('updateProducts').then(_ => {
-					console.log("Successfully dispatched updateProducts action");
-					this.$router.push('/products/' + res);
+				this.$store.dispatch('updateBouquets').then(_ => {
+					console.log("Successfully dispatched updateBouquets action");
+					this.loaded = false;
+					this.$router.push('/bouquets/' + res);
 				});
 			}).catch(err => {
 				this.submitting = false;
@@ -129,13 +143,23 @@ export default {
 			});
 		}
 	},
+	created() {
+		this.name = this.bouquet.name;
+		this.price = this.bouquet.price;
+		this.packSize = this.bouquet.packSize;
+		this.collectionsArray = this.bouquet.collections;
+		this.tagsArray = this.bouquet.tags;
+	},
 	computed: {
 		uniqueTags() {
 			return this.$store.state.uniqueTags;
 		},
 		uniqueCollections() {
 			return this.$store.state.uniqueCollections;
-		}
+		},
+		bouquet() {
+			return this.$store.getters.bouquet(this.bouquetId);;
+		},
 	}
 };
 </script>

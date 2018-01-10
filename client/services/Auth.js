@@ -40,7 +40,7 @@ export default {
 				else {
 					reject('Unable to send login request.');
 				}
-				console.error("Error sending login request", error);
+				console.error("Error sending login request", JSON.stringify(error));
 			});
 		});
 	},

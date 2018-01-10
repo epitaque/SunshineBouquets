@@ -1,16 +1,15 @@
 <template>
 	<div class="root col-9 col-lg-12">
 		<a v-on:click="back()">Back</a>
-		<product :productId="$route.params.id" viewType="full"></product>
+		<bouquet :bouquetId="$route.params.id" viewType="full"></bouquet>
 	</div>
 </template>
 
 <script>
-import Product from './Product';
-
+import Bouquet from './Bouquet';
 export default {
 	components: {
-		'product': Product
+		'bouquet': Bouquet
 	},
 	data() {
 		return {};
@@ -21,7 +20,7 @@ export default {
 		}
 	},
 	created() {
-		console.log("Product page loaded.");
+		console.log("Bouquet page loaded.");
 	}
 };
 </script>
@@ -31,7 +30,6 @@ export default {
 	text-align: left;
 	margin-left: auto;
 	margin-right: auto;
-
 	margin-top: 10px;
 	padding: 10px;
 	border-radius: 5px;

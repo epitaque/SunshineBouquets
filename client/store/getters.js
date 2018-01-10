@@ -6,12 +6,22 @@ export const isLoggedIn = (state) => {
 	return state.user !== null;
 }
 
-export const product = (state) => (id) => {
-	return state.products[id];
+export const tempMsrps = (state) => (id) => {
+	return state.tempMsrps[id];
+}
+
+export const bouquet = (state) => (id) => {
+	for(var i = 0; i < state.bouquets.length; i++) {
+		if(state.bouquets[i].id == id) {
+			return state.bouquets[i];
+		}
+	}
+	return null;
 } 
 
-export const products = (state) => {
-	return Object.values(state.products);
+export const bouquets = (state) => {
+	console.log("Bouquets getter printing state: " + JSON.stringify(state));
+	return state.bouquets;
 }
 
 export const cart = (state) => {

@@ -1,13 +1,13 @@
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import CollectionsList from './components/Collections/CollectionsList';
-import ProductsList from './components/Products/ProductsList';
-import ProductPage from './components/Products/ProductPage';
+import BouquetsList from './components/Bouquets/BouquetsList';
+import BouquetPage from './components/Bouquets/BouquetPage';
 import Profile from './components/Auth/Profile';
 import Homepage from './components/Homepage';
 import Cart from './components/Cart/Cart';
-import AddProduct from './components/Products/AddProduct';
-import EditProduct from './components/Products/EditProduct';
+import AddBouquet from './components/Bouquets/AddBouquet';
+import EditBouquet from './components/Bouquets/EditBouquet';
 
 var Routes = [
 	{ path: '', component: Homepage },
@@ -15,11 +15,11 @@ var Routes = [
 	{ path: '/login', component: Login },
     { path: '/register', component: Register },
 	{ path: '/collections', component: CollectionsList },
-	{ path: '/products', component: ProductsList },
+	{ path: '/bouquets', component: BouquetsList },
 	{ path: '/profile', component: Profile },
-	{ path: '/products/add', component: AddProduct },		
-	{ path: '/products/:id', component: ProductPage },
-	{ path: '/products/edit/:id', component: EditProduct },	
+	{ path: '/bouquets/add', component: AddBouquet },		
+	{ path: '/bouquets/:id', component: BouquetPage },
+	{ path: '/bouquets/edit/:id', component: EditBouquet },	
 ];
 
 export { Routes }

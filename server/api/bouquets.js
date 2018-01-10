@@ -1,9 +1,9 @@
-var db = require('../database/products');
+var db = require('../database/bouquets');
 var fs = require('fs');
 const path = require('path');
 
-module.exports.addProduct = (req, res, next) => {		
-	db.addProduct({
+module.exports.addBouquet = (req, res, next) => {		
+	db.addBouquet({
 		name: req.body.name,
 		image: req.file == null ? '' : req.file.path,
 		price: req.body.price,
@@ -13,15 +13,15 @@ module.exports.addProduct = (req, res, next) => {
 	}).then(id_ => {
 		res.status(200).json({ id: id_ });
 	}).catch(err => {
-		res.status(500).json({error: "Unable to add product: " + err});	
+		res.status(500).json({error: "Unable to add bouquet: " + err});	
 	});
 
 }
 
-module.exports.editProduct = (req, res, next) => {
-	console.log("editProduct request done. req.body stringified: " + JSON.stringify(req.body));
+module.exports.editBouquet = (req, res, next) => {
+	console.log("editBouquet request done. req.body stringified: " + JSON.stringify(req.body));
 	
-	var newProduct = {
+	var newBouquet = {
 		name: req.body.name,
 		price: req.body.price,
 		packSize: req.body.packSize,
@@ -33,58 +33,58 @@ module.exports.editProduct = (req, res, next) => {
 	console.log("req.body: " + JSON.stringify(req.body));	
 	if(req.body.pictureRemoved == 'true') {
 		console.log("Setting image to ''");
-		deleteProductImage(req.body.id).then(_ => {
-			newProduct.image = '';		
-			updateProduct(newProduct, res);			
+		deleteBouquetImage(req.body.id).then(_ => {
+			newBouquet.image = '';		
+			updateBouquet(newBouquet, res);			
 		});		
 	}
 	else if(req.body.pictureChanged == 'true' && req.file != null) {
 		console.log("Changing image path, because req.body.pictureChanged = " + req.body.pictureChanged);
 
-		deleteProductImage(req.body.id).then(_ => {
-			newProduct.image = req.file.path;
-			updateProduct(newProduct, res);			
+		deleteBouquetImage(req.body.id).then(_ => {
+			newBouquet.image = req.file.path;
+			updateBouquet(newBouquet, res);			
 		});
 	}
 	else {
-		updateProduct(newProduct, res);
+		updateBouquet(newBouquet, res);
 	}
 }
 
-function updateProduct (newProduct, res) {
-	db.editProduct(newProduct).then(id_ => {
-		console.log("Successfully edited product");
+function updateBouquet (newBouquet, res) {
+	db.editBouquet(newBouquet).then(id_ => {
+		console.log("Successfully edited bouquet");
 		res.status(200).json({ id: id_ });
 	}).catch(err => {
-		console.log("Unsuccessfully edited product: " + err);		
-		res.status(500).json({error: "Unable to edit product: " + err});	
+		console.log("Unsuccessfully edited bouquet: " + err);		
+		res.status(500).json({error: "Unable to edit bouquet: " + err});	
 	});
 }
 
-module.exports.getProducts = (req, res) => {
-	db.getProducts().then(products => {
-		res.status(200).json(products);
+module.exports.getBouquets = (req, res) => {
+	db.getBouquets().then(bouquets => {
+		res.status(200).json(bouquets);
 	}).catch(err => {
 		res.status(500).json({error: err});
 	})
 }
 
-module.exports.removeProduct = (req, res) => {
-	console.log("removeProduct called");
-	deleteProductImage(req.body.id).then(_ => {
-		db.removeProduct(req.body.id).then(_ => {
-			console.log("In products.js, sending 200 status");
+module.exports.removeBouquet = (req, res) => {
+	console.log("removeBouquet called");
+	deleteBouquetImage(req.body.id).then(_ => {
+		db.removeBouquet(req.body.id).then(_ => {
+			console.log("In bouquets.js, sending 200 status");
 			res.sendStatus(200).json({id: req.body.id});
 		}).catch(err => {
-			console.log("In products.js, sending 500 status due to error: " + JSON.stringify(err));		
+			console.log("In bouquets.js, sending 500 status due to error: " + JSON.stringify(err));		
 			res.status(500).json({error: err});
 		});	
 	});	
 }
 
-function deleteProductImage (productId) {
+function deleteBouquetImage (bouquetId) {
 	return new Promise((resolve, reject) => {
-		db.getProduct(productId).then(res => {
+		db.getBouquet(bouquetId).then(res => {
 			console.log("Dirname: " + __dirname);
 			console.log("Image: " + res.image);			
 			var url = path.join(__dirname, '../../', res.image);

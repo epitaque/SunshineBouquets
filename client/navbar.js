@@ -9,7 +9,7 @@ const NavBar = {
         </section>
         <section class="navbar-section">
             <router-link to="/foo" class="btn btn-link darkgreen">Collections</router-link>
-            <router-link to="/foo" class="darkgreen btn btn-link">Products</router-link>
+            <router-link to="/foo" class="darkgreen btn btn-link">Bouquets</router-link>
             <router-link to="/foo" class="btn btn-link darkgreen">Login</router-link>
             <router-link to="/foo" class="btn btn-link darkgreen">Register</router-link>    
         </section>

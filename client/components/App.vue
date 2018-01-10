@@ -17,7 +17,7 @@ export default {
 		return {};
 	},
 	created() {
-		this.$store.dispatch('updateProducts');
+		this.$store.dispatch('updateBouquets');
 	}
 };
 </script>

@@ -1,4 +1,5 @@
 var con = require('./init').connection;
+var mysql = require('mysql');
 
 module.exports.listUsers = () => {
 	con.query("SELECT * FROM users", (err, rows) => {

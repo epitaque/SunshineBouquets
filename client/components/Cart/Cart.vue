@@ -1,11 +1,11 @@
 <template>
 	<div style="margin-top: 20px;" class="text-left col-mx-auto column col-6 col-xs-12">
 		<h2>Cart</h2>
-		<div class="col-12" v-if="productIds.length != 0">
+		<div class="col-12" v-if="bouquetIds.length != 0">
 			<div class="columns">
-				<product v-for="productId in productIds" viewType="cart" :productId="productId">
+				<bouquet v-for="bouquetId in bouquetIds" viewType="cart" :bouquetId="bouquetId">
 
-				</product>
+				</bouquet>
 			</div>
 
 			<div class="form-group">
@@ -18,8 +18,8 @@
 			</div>
 		</div>
 
-		<p class="text-large text-gray" v-if="user != null && productIds.length == 0"> 
-			Your cart is empty. Try adding some <router-link to="/products">products</router-link>.
+		<p class="text-large text-gray" v-if="user != null && bouquetIds.length == 0"> 
+			Your cart is empty. Try adding some <router-link to="/bouquets">bouquets</router-link>.
 		</p>
 		<p class="text-large text-gray" v-if="user == null">
 			Looks like you're not logged in, please <router-link to="/login">Login</router-link> to add items to your cart.
@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import Product from '../Products/Product';
+import Bouquet from '../Bouquets/Bouquet';
 
 export default {
 	components: {
-		'product': Product
+		'bouquet': Bouquet
 	},
 	data() {
 		return {
@@ -43,13 +43,13 @@ export default {
 		cart() {
 			return this.$store.getters.cart;
 		},
-		productIds() {
-			/*var products = [];
-			for(var i = 0; i < this.cart.productIds.length; i++) {
-				products.push(this.$store.getters.product[this.cart.productIds[i]]);
+		bouquetIds() {
+			/*var bouquets = [];
+			for(var i = 0; i < this.cart.bouquetIds.length; i++) {
+				bouquets.push(this.$store.getters.bouquet[this.cart.bouquetIds[i]]);
 			}*/
 
-			return this.cart.productIds;
+			return this.cart.bouquetIds;
 		},
 		user() {
 			return this.$store.getters.getUser
