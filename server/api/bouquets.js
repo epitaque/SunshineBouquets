@@ -2,20 +2,39 @@ var db = require('../database/bouquets');
 var fs = require('fs');
 const path = require('path');
 
-module.exports.addBouquet = (req, res, next) => {		
-	db.addBouquet({
-		name: req.body.name,
-		image: req.file == null ? '' : req.file.path,
-		price: req.body.price,
-		packSize: req.body.packSize,
-		collections: req.body.collections,
-		tags: req.body.tags,	
-	}).then(id_ => {
-		res.status(200).json({ id: id_ });
-	}).catch(err => {
-		res.status(500).json({error: "Unable to add bouquet: " + err});	
-	});
-
+module.exports.addBouquet = (req, res, next) => {
+	try {
+		var srps = [];
+		console.log("req.body: " + JSON.stringify(req.body));
+		for(var i = 0; i < req.body.srps.length; i++) {
+			console.log("	srps[" + i + "]: " + req.body.srps[i]);
+			var reqSrp = JSON.parse(req.body.srps[i]);
+			var srp = {};
+			srp.image = reqSrp.imageIndex == -1 ? '' : req.files[reqSrp.imageIndex].path;
+			srp.name = reqSrp.name;
+			srp.stems = reqSrp.stems;
+			srp.date_added = new Date();
+			srp.srp = parseFloat(reqSrp.srp);
+			console.log("	srp: " + JSON.stringify(srp));
+			srps[i] = srp;		
+		}
+		db.addBouquet({
+			name: req.body.name,
+			description: req.body.description,
+			pack_size: req.body.pack_size,
+			image: req.body.imageIndex == -1 ? '' : req.files[req.body.imageIndex].path,
+			collections: req.body.collections,
+			tags: req.body.tags,
+			date_added: new Date(),
+			srps
+		}).then(({id, srpResults}) => {
+			res.status(200).json({id});
+		}).catch(err => {
+			res.status(500).json({error: "Unable to add bouquet: " + err});	
+		});
+	} catch(e) {
+		res.status(500).json({error: "Unable to add bouquet."});
+	}
 }
 
 module.exports.editBouquet = (req, res, next) => {

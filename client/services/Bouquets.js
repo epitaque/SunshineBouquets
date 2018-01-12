@@ -6,18 +6,44 @@ export default {
 			console.log("Adding bouquet...");
 
 			var formData = new FormData();
-
 			var apiUrl = '/api/bouquets/add';
 			
-			if(bouquet.image) {
-				apiUrl += 'withimage';
-				formData.append('image', bouquet.image);				
-			}
+			var containsImages = false;
+			var imageIndex = 0;
+
 			formData.append('name', bouquet.name);
-			formData.append('price', bouquet.price);
+			formData.append('description', bouquet.description);	
+			formData.append('pack_size', bouquet.packSize);
+			if(bouquet.image) { 
+				formData.append('images[]', bouquet.image); 
+				formData.append('imageIndex', imageIndex++);
+				containsImages = true;								
+			}
+			else {
+				formData.append('imageIndex', -1);
+			}
 			formData.append('collections', bouquet.collections.join());
-			formData.append('packSize', bouquet.packSize);
 			formData.append('tags', bouquet.tags.join());
+			
+			for(var i = 0; i < bouquet.srps.length; i++) {
+				var srp = {};
+				if(bouquet.srps[i].image) {
+					srp.imageIndex = imageIndex++;
+					formData.append('images[]', bouquet.srps[i].image);
+					containsImages = true;
+				}
+				else {
+					srp.imageIndex = -1;
+				}
+				srp.srp = bouquet.srps[i].srp;
+				srp.name = bouquet.srps[i].name;
+				srp.stems = bouquet.srps[i].stems;
+				formData.append('srps[]', JSON.stringify(srp));		
+			}
+
+			if(containsImages) {
+				apiUrl += 'withimage';				
+			}
 
 			Vue.http.post(apiUrl, formData, 
 				{ headers: { 'Content-Type': 'multipart/form-data' }
@@ -44,7 +70,7 @@ export default {
 			
 			if(!bouquet.pictureRemoved && bouquet.pictureChanged && bouquet.image != null && bouquet.image != 'null') {
 				apiUrl += 'withimage';
-				formData.append('image', bouquet.image);
+	-			formData.append('image', bouquet.image);
 			}
 
 			console.log("pictureRemoved status: " + bouquet.pictureRemoved);

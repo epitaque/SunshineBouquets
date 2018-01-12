@@ -12,6 +12,7 @@ CREATE TABLE bouquets (
 	bouquet_id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(50),
 	description varchar(500),
+	pack_size int(11),
 	image varchar(50),
 	collections varchar(500),
 	tags varchar(500),
@@ -20,25 +21,24 @@ CREATE TABLE bouquets (
 	PRIMARY KEY(bouquet_id)
 );
 
-CREATE TABLE msrps (
-	msrp_id int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE srps (
+	srp_id int(11) NOT NULL AUTO_INCREMENT,
 	bouquet_id int(11) NOT NULL,
 	image varchar(50),
 	name varchar(50),
-	price decimal(10,2),
+	srp decimal(10,2),
 	stems int(11),
 	date_added datetime NOT NULL,
 
-	PRIMARY KEY(msrp_id),
+	PRIMARY KEY(srp_id),
 	FOREIGN KEY(bouquet_id) REFERENCES bouquets(bouquet_id)
-)
+);
 
 CREATE TABLE collections (
 	collection_id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(50),
 	description varchar(500),
 	bouquets varchar(500),
-	dateadded datetime NOT NULL,
 	banner_image varchar(50) NOT NULL,
 	date_added datetime NOT NULL,
 

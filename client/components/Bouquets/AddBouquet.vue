@@ -38,6 +38,20 @@
 				<label class="form-label" for="s_collections">Tags</label>
 				<input-tag :tags="tagsArray" :autocompletes="uniqueTags"></input-tag>
 			</div>
+			<div class="form-group">
+				<label class="form-label" for="input-example-3">Description</label>
+				<textarea v-model="description" class="form-input" id="input-example-3" rows="3"></textarea>
+			</div>
+
+			<div class="form-group">
+				<label class="form-label">SRPs</label>
+				<div v-for="srpId of srpIds">
+					<EditableSRP new :id="srpId"></EditableSRP>
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="btn" @click="addSrp(true)">Add SRP</button>
+			</div>
 
             <p v-show="formHasErrors" class="form-input-hint text-error">Please fix errors before trying to add a bouquet.</p>
 
@@ -56,28 +70,30 @@
 import PictureInput from 'vue-picture-input'
 import InputTag from './InputTag'
 import BouquetService from '../../services/Bouquets';
+import EditableSRP from './EditableSRP';
 
 export default {
 	components: {
 		PictureInput,
-		InputTag
+		InputTag,
+		EditableSRP
 	},
 	data() {
 		return {
 			name: '',
 			image: null,
-			msrpIds: [],
 			packSize: 1,
 			collectionsArray: [],
 			tagsArray: [],
 			formHasErrors: false,
 			success: false,
 			submitError: '',
-			submitting: false
+			submitting: false,
+			description: ''
 		};
 	},
-	created: {
-		msrpIds.push()
+	created() {
+		this.addSrp(false);
 	},
 	methods: {
 		onPictureChange() {
@@ -106,10 +122,11 @@ export default {
 			BouquetService.addBouquet({
 				name: this.name,
 				image: this.image,
-				price: this.price,
 				packSize: this.packSize,
 				collections: this.collectionsArray,
+				description: this.description,
 				tags: this.tagsArray,
+				srps: this.$store.getters.tempSrps
 			}).then(res => {
 				console.log("BouquetService.addBouquet request");
 				this.submitting = false;
@@ -122,6 +139,10 @@ export default {
 				this.submitting = false;
 				this.submitError = err;
 			});
+		},
+		addSrp(deletable) {
+			console.log("adding srp");
+			this.$store.commit('addTempSrp', deletable);
 		}
 	},
 	computed: {
@@ -130,6 +151,12 @@ export default {
 		},
 		uniqueCollections() {
 			return this.$store.state.uniqueCollections;
+		},
+		srpIds() {
+			return this.$store.getters.tempSrpKeys;
+		},
+		bouquet() {
+			return this.$store.getters.tempBouquet;
 		}
 	}
 };

@@ -5,6 +5,7 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser')
 var path = require("path");
 var multer = require('multer');
+const MulterResizer = require('multer-resizer');
 var compression = require('compression')
 
 var db = require('./database/init'); 
@@ -41,13 +42,39 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage });
+const resizer = new MulterResizer({
+    multer: upload,
+    tasks: [
+        {
+            resize: {
+                width: 1000,
+                height: 1000,
+                suffix: 'resized-big'
+            }
+        },
+        {
+            resize: {
+                width: 500,
+                height: 500,
+                suffix: 'resized-medium'
+            }
+        },
+        {
+            cover: {
+                width: 226,
+                height: 226,
+                suffix: 'resized-small'
+            }
+        }
+    ]
+});
 
 //console.log("auth.validate: " + auth.validate + ", upload.array(): " + upload.array() + ", bouquets.addBouquet: " + bouquets.addBouquet);
 
 app.post('/api/bouquets/add', auth.validate, upload.array(), bouquets.addBouquet);
-app.post('/api/bouquets/addwithimage', auth.validate, upload.single('image'), bouquets.addBouquet);
+app.post('/api/bouquets/addwithimage', auth.validate, upload.resizer('images[]'), bouquets.addBouquet);
 app.post('/api/bouquets/edit', auth.validate, upload.array(), bouquets.editBouquet);
-app.post('/api/bouquets/editwithimage', auth.validate, upload.single('image'), bouquets.editBouquet);
+app.post('/api/bouquets/editwithimage', auth.validate, upload.array('images[]'), bouquets.editBouquet);
 app.post('/api/bouquets/delete', auth.validate, bouquets.removeBouquet);
 app.get('/api/bouquets', bouquets.getBouquets);
 app.get('/api/profile', auth.validate, (req, res) => { res.json({ user: req.decoded.name, email: req.decoded.email }); });

@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { tempMsrps } from './getters';
 
 export const setUser = (state, user) => {
 	Vue.set(state, 'user', user);
@@ -10,30 +9,33 @@ export const logout = (state) => {
 	Vue.set(state, 'user', null);
 }
 
-export const addMsrpId = (state, msrpId) => {
+export const addSrpId = (state, srpId) => {
 
 }
 
-export const addTempMsrp = (state, msrpId = Math.round(Math.random() * 1000000)) => {
-	tempMsrps[msrpId] = {};
-	return msrpId;
+var uid = 0;
+export const addTempSrp = (state, deletable) => {
+	var srpId = uid++;
+	Vue.set(state.tempSrps, srpId, { srp_id: srpId, deletable: deletable, initialized: false })
+	return srpId;
 }
 
-export const removeTempMsrp = (state, msrpId) => {
-	delete tempMsrps[msrpId];
+export const removeTempSrp = (state, srpId) => {
+	//delete state.tempSrps[srpId];
+	Vue.delete(state.tempSrps, srpId);
 }
 
-export const addMsrpIdToCart = (state, bouquetId) => {
-	Vue.set(state.msrps[msrpId], 'inCart', true);
+export const addSrpIdToCart = (state, bouquetId) => {
+	Vue.set(state.srps[srpId], 'inCart', true);
 	//state.bouquets[bouquetId].inCart = true;	
-	state.cart.msrpIds.push(msrpId);
+	state.cart.srpIds.push(srpId);
 }
 
-export const removeMsrpIdFromCart = (state, msrpId) => {
-	Vue.set(state.msrps[msrpId], 'inCart', false);	
-	for(var i = 0; i < state.cart.msrpsIds.length; i++) {
-		if(state.cart.msrpIds[i] == msrpsId) {
-			state.cart.msrpsIds.splice(i, 1);
+export const removeSrpIdFromCart = (state, srpId) => {
+	Vue.set(state.srps[srpId], 'inCart', false);	
+	for(var i = 0; i < state.cart.srpsIds.length; i++) {
+		if(state.cart.srpIds[i] == srpsId) {
+			state.cart.srpsIds.splice(i, 1);
 			return;
 		}
 	}

@@ -51,7 +51,9 @@
 			<div class="col-9 col-xs-12">
 				<div v-if="bouquet != null">
 					<h2>{{bouquet.name}}</h2>
-					<h3>MSRPS</h3>
+					<h3>Description</h3>
+					<p>{{bouquet.description}}</p>
+					<h3>SRPs</h3>
 					<p> to be added... </p>
 					<h3>Tags</h3>
 					<div class="tile-subtitle text-gray">
@@ -64,7 +66,7 @@
 					<h3>Pack Size</h3>
 					<p>{{bouquet.packSize}}</p>
 					<h3>Date Added</h3>
-					<p>{{new Date(bouquet.dateAdded).toLocaleDateString()}}</p>
+					<p>{{new Date(bouquet.date_added).toLocaleDateString()}}</p>
 					<div v-if="isLoggedIn">
 						<button @click="remove" class="btn btn-error">Delete</button> 
 						<button @click="edit" class="btn">Edit</button>
@@ -91,8 +93,8 @@ export default {
 	},
 	computed: {
 		bouquet() {
-			//var bouquet = this.$store.getters.bouquet(this.bouquetId);
-			var bouquet = {
+			var bouquet = this.$store.getters.bouquet(this.bouquetId);
+			/*var bouquet = {
 				bouquet_id: 1,
 				name: 'Liliac Flowers',
 				description: 'A wonderful addition to any holiday celebration, the liliac flower symbolizes love.',
@@ -100,10 +102,13 @@ export default {
 				collections: ['Holidays'],
 				tags: ['warm', 'cozy'],
 				date_added: new Date()
-			};
+			};*/
 			if(bouquet == null) {
 				this.error = 'bouquet #'+ this.bouquetId + ' does not exist.';
 				return null;
+			}
+			else {
+				this.error = '';
 			}
 			return bouquet;
 		},

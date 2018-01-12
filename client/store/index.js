@@ -13,12 +13,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		user: null,
-		tempMsrps: {},
-		tempBouquet: {},
+		tempSrps: {},
 		bouquets: [],
-		msrps: [],
+		srps: [],
 		cart: {
-			msrpIds: [],
+			srpIds: [],
 			note: ""
 		},
 		uniqueCollections: [], 
@@ -27,7 +26,7 @@ export default new Vuex.Store({
 	getters,
 	mutations,
 	actions,
-	plugins: [createPersistedState(), createMutationsSharer({
-		predicate: ['setUser', 'logout', 'addMsrpIdToCart', 'removeMsrpIdFromCart', 'updateCartNote']  //(mutation, state) => true
-	})]
+	/*plugins: [createPersistedState(), createMutationsSharer({
+		predicate: ['setUser', 'logout', 'addSrpIdToCart', 'removeSrpIdFromCart', 'updateCartNote']  //(mutation, state) => true
+	})]*/
 });

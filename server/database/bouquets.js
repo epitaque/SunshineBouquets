@@ -1,25 +1,60 @@
 var con = require('./init').connection;
 
 module.exports.addBouquet = (bouquet) => {
-	var today = new Date();
+	//var today = new Date();
 	return new Promise((resolve, reject) => {
 		var bouquetData = {
 			name: bouquet.name,
-			image: bouquet.image,
-			price: bouquet.price,
-			packSize: bouquet.packSize,
+			description: bouquet.description,
+			pack_size: bouquet.pack_size,
+			image: bouquet.image,			
 			collections: bouquet.collections,
 			tags: bouquet.tags,
-			dateadded: today
+			date_added: bouquet.date_added
 		};
 		con.query('INSERT INTO bouquets SET ?', bouquetData, function (error, result) {
 			if (error) {
 				reject(error);
 			} else {
-				resolve(result.insertId);
+				var id = result.insertId;
+
+				// Successfully added row for bouquet, now to add SRPs
+				var promises = [];
+				for(var i = 0; i < bouquet.srps.length; i++) {
+					var bouSrp = bouquet.srps[i];
+					bouSrp.bouquet_id = id;
+					//var srp = {};
+					/*
+					srp.image = bouSrp.image;
+					srp.name = bouSrp.name;
+					srp.stems = bouSrp.stems;
+					srp.date_added = bouSrp.date_added;
+					srp.srp = bouSrp.srp;*/
+
+					promises[i] = addSrps(bouSrp);
+				}
+
+				Promise.all(promises).then(srpIds => {
+					resolve({id, srpIds});
+				}).catch(err => {
+					reject(err);
+				});
 			}
 		});
 	
+	});
+}
+
+function addSrps(srpData) {
+	return new Promise((resolve, reject) => {
+		con.query('INSERT INTO srps SET ?', srpData, function (error, result) {
+			if(error) {
+				reject(error);
+			}
+			else {
+				resolve(result.id);
+			}
+		});
 	});
 }
 

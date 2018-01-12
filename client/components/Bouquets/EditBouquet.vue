@@ -27,12 +27,12 @@
 			<div class="form-group">
 				<div class="columns">
 					<div class="column col-sm-12 col-6">
-						<label class="form-label" for="s_price">Price</label>
+						<label class="form-label" for="s_srp">Price</label>
 						<div class="input-group">
 							<span class="input-group-addon">$</span>
-							<input v-validate="'required'" v-model="price" :class="{'input': true, 'is-error': errors.has('price') }" type="number" min="0" step="0.01" class="form-input" name="price" id="s_price" />
+							<input v-validate="'required'" v-model="srp" :class="{'input': true, 'is-error': errors.has('srp') }" type="number" min="0" step="0.01" class="form-input" name="srp" id="s_srp" />
 						</div>
-						<p v-show="errors.has('price')" class="form-input-hint text-error">{{ errors.first('price') }}</p>
+						<p v-show="errors.has('srp')" class="form-input-hint text-error">{{ errors.first('srp') }}</p>
 					</div>
 					<div class="column col-sm-12 col-6">
 						<label class="form-label" for="s_packsize">Pack Size</label>
@@ -77,7 +77,7 @@ export default {
 		return {
 			name: '',
 			image: null,
-			price: 0,
+			srp: 0,
 			packSize: 1,
 			collectionsArray: [],
 			tagsArray: [],
@@ -121,7 +121,7 @@ export default {
 			BouquetService.editBouquet({
 				name: this.name,
 				image: this.image,
-				price: this.price,
+				srp: this.srp,
 				packSize: this.packSize,
 				collections: this.collectionsArray,
 				tags: this.tagsArray,
@@ -145,7 +145,7 @@ export default {
 	},
 	created() {
 		this.name = this.bouquet.name;
-		this.price = this.bouquet.price;
+		this.srp = this.bouquet.srp;
 		this.packSize = this.bouquet.packSize;
 		this.collectionsArray = this.bouquet.collections;
 		this.tagsArray = this.bouquet.tags;
