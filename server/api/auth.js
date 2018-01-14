@@ -1,7 +1,7 @@
 var db = require("../database/users");
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const tokens = require('../tokens');
+//const tokens = require('../tokens');
 
 module.exports.registerUser = (req, res) => {
 	var body = req.body;

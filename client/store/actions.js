@@ -1,6 +1,7 @@
 import BouquetService from '../services/Bouquets';
 
 export function updateBouquets({ commit }) {
+	//return;
 	return new Promise((resolve, reject) => {
 		BouquetService.getBouquets()
 		.then(bouquets => {
@@ -16,14 +17,14 @@ export function updateBouquets({ commit }) {
 				console.log(bouquet);
 	
 				bouquet.id = bouquet.bouquet_id;
-				bouquet.tags = bouquet.tags.split(',');
-				bouquet.collections = bouquet.collections.split(',');
+				bouquet.tags = bouquet.tags.length == 0 ? [] : bouquet.tags.split(',');
+				bouquet.collections = bouquet.collections.length == 0 ? [] : bouquet.collections.split(',');
 				bouquet.date_added = new Date(bouquet.date_added);
 				if(bouquet.image == '') {
 					bouquet.image = '/resource/genericflower.jpg';
 				}
 				else {
-					bouquet.image = '\\' + bouquet.image;					
+					bouquet.image = bouquet.image;					
 				}
 				
 				for(var j = 0; j < bouquet.collections.length; j++) {

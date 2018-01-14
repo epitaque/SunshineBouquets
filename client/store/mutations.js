@@ -9,22 +9,6 @@ export const logout = (state) => {
 	Vue.set(state, 'user', null);
 }
 
-export const addSrpId = (state, srpId) => {
-
-}
-
-var uid = 0;
-export const addTempSrp = (state, deletable) => {
-	var srpId = uid++;
-	Vue.set(state.tempSrps, srpId, { srp_id: srpId, deletable: deletable, initialized: false })
-	return srpId;
-}
-
-export const removeTempSrp = (state, srpId) => {
-	//delete state.tempSrps[srpId];
-	Vue.delete(state.tempSrps, srpId);
-}
-
 export const addSrpIdToCart = (state, bouquetId) => {
 	Vue.set(state.srps[srpId], 'inCart', true);
 	//state.bouquets[bouquetId].inCart = true;	

@@ -27,9 +27,9 @@ export default {
 			
 			for(var i = 0; i < bouquet.srps.length; i++) {
 				var srp = {};
-				if(bouquet.srps[i].image) {
+				if(bouquet.srps[i].image_file) {
 					srp.imageIndex = imageIndex++;
-					formData.append('images[]', bouquet.srps[i].image);
+					formData.append('images[]', bouquet.srps[i].image_file);
 					containsImages = true;
 				}
 				else {

@@ -6,18 +6,6 @@ export const isLoggedIn = (state) => {
 	return state.user !== null;
 }
 
-export const tempSrps = (state) => {
-	return Object.values(state.tempSrps);
-}
-
-export const tempSrp = (state) => (id) => {
-	return state.tempSrps[id];
-}
-
-export const tempSrpKeys = (state) => {
-	return Object.keys(state.tempSrps);
-}
-
 export const bouquet = (state) => (id) => {
 	for(var i = 0; i < state.bouquets.length; i++) {
 		if(state.bouquets[i].id == id) {

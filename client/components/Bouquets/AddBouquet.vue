@@ -45,12 +45,12 @@
 
 			<div class="form-group">
 				<label class="form-label">SRPs</label>
-				<div v-for="srpId of srpIds">
-					<EditableSRP new :id="srpId"></EditableSRP>
+				<div v-for="(srp, index) of srps">
+					<EditableSRP v-model="srps[index]" v-on:deleted="deleteSrp(index)"></EditableSRP>
 				</div>
 			</div>
 			<div class="form-group">
-				<button class="btn" @click="addSrp(true)">Add SRP</button>
+				<button type="button" class="btn" @click="addSrp(true)">Add SRP</button>
 			</div>
 
             <p v-show="formHasErrors" class="form-input-hint text-error">Please fix errors before trying to add a bouquet.</p>
@@ -89,6 +89,7 @@ export default {
 			success: false,
 			submitError: '',
 			submitting: false,
+			srps: [],
 			description: ''
 		};
 	},
@@ -126,7 +127,7 @@ export default {
 				collections: this.collectionsArray,
 				description: this.description,
 				tags: this.tagsArray,
-				srps: this.$store.getters.tempSrps
+				srps: this.srps
 			}).then(res => {
 				console.log("BouquetService.addBouquet request");
 				this.submitting = false;
@@ -142,7 +143,12 @@ export default {
 		},
 		addSrp(deletable) {
 			console.log("adding srp");
-			this.$store.commit('addTempSrp', deletable);
+			this.srps.push({
+				deletable
+			});
+		},
+		deleteSrp(index) {
+			this.srps.splice(index);
 		}
 	},
 	computed: {

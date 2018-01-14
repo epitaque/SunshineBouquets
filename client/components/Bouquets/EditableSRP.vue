@@ -11,7 +11,7 @@
 									<input v-model="srp.name" type="text" class="form-input" name="name" id="s_name" />
 								</div>
 								<div class="column col-5" v-if="srp.deletable">
-									<button class="btn btn-primary btn-error" @click="remove()">Remove</button>
+									<button type="button" class="btn btn-primary btn-error" @click="remove()">Remove</button>
 								</div>
 							</div>
 							<div class="columns">
@@ -56,18 +56,15 @@ import PictureInput from 'vue-picture-input'
 
 export default {
 	components: {PictureInput},
-	props: ['new', 'id', 'bouquetId', 'removable'],
+	props: ['value'],
 	computed: {
 		srp() {
-			console.log('srp id: ' + this.id);
-			var srp = this.$store.getters.tempSrp(this.id);
+			var srp = this.value;
 
 			if(!srp.initialized) {
 				console.log("SRP uninitialized, initializing...");
 
-				
 				srp.bouquet_id = this.bouquetId;
-				srp.image = null;
 				srp.image_file = null;
 				srp.name = '';
 				srp.srp = 0;
@@ -79,26 +76,22 @@ export default {
 		}
 	},
 	methods: {
+		updateValue() {
+			this.value = this.srp;
+			this.$emit('input', this.srp);
+		},
 		onPictureChange() {
 			console.log('New SRP picture selected!')
 			if (this.$refs.pictureInput.image) {
 				this.srp.image_file = this.$refs.pictureInput.file;
+				this.updateValue();
 				console.log('Picture loaded.')
 			} else {
 				console.log('FileReader API not supported: use the <form>, Luke!')
 			}
 		},
-		revalidate() {
-			this.$validator.validateAll().then((result) => {
-				if (result) {
-					this.submit();
-					return;
-				}
-				this.srp.valid = false;
-			});
-		},
 		remove() {
-			this.$store.commit('removeTempSrp', this.id);
+			this.$emit('deleted');
 		}
 	}
 }

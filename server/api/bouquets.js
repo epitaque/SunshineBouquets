@@ -3,7 +3,6 @@ var fs = require('fs');
 const path = require('path');
 
 module.exports.addBouquet = (req, res, next) => {
-	try {
 		var srps = [];
 		console.log("req.body: " + JSON.stringify(req.body));
 		for(var i = 0; i < req.body.srps.length; i++) {
@@ -18,6 +17,7 @@ module.exports.addBouquet = (req, res, next) => {
 			console.log("	srp: " + JSON.stringify(srp));
 			srps[i] = srp;		
 		}
+		//console.log("req.files[0].path: " + JSON.stringify(req.files[0].path));
 		db.addBouquet({
 			name: req.body.name,
 			description: req.body.description,
@@ -32,9 +32,6 @@ module.exports.addBouquet = (req, res, next) => {
 		}).catch(err => {
 			res.status(500).json({error: "Unable to add bouquet: " + err});	
 		});
-	} catch(e) {
-		res.status(500).json({error: "Unable to add bouquet."});
-	}
 }
 
 module.exports.editBouquet = (req, res, next) => {
