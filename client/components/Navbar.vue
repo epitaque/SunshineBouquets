@@ -17,7 +17,6 @@
 				</div>
 			</section>
         </header>
-        <div class="bar"></div>
     </div>
 </template>
 
@@ -28,9 +27,6 @@ export default {
 	name: "navbar",
 	data() {
 		return {};
-	},
-	created() {
-		console.log("this.$store: " + this.$store);
 	},
 	computed: {
 		isLoggedIn() {

@@ -5,17 +5,17 @@ export function updateBouquets({ commit }) {
 	return new Promise((resolve, reject) => {
 		BouquetService.getBouquets()
 		.then(bouquets => {
-			var newBouquetArray = [];
+			var srps = [];
 			var uniqueCollections = [];
 			var uniqueTags = [];
-	
-			console.log("Got bouquets: " + bouquets);
-	
+		
 			for(var i = 0; i < bouquets.length; i++) {
 				var bouquet = bouquets[i];
-	
-				console.log(bouquet);
-	
+		
+				for(var j = 0; j < bouquet.srps.length; j++) {
+					srps.push(bouquet.srps[j]);
+				}
+
 				bouquet.id = bouquet.bouquet_id;
 				bouquet.tags = bouquet.tags.length == 0 ? [] : bouquet.tags.split(',');
 				bouquet.collections = bouquet.collections.length == 0 ? [] : bouquet.collections.split(',');
@@ -37,15 +37,9 @@ export function updateBouquets({ commit }) {
 						uniqueTags.push(bouquet.tags[j]);
 					}
 				}		
-	
-				newBouquetArray.push(bouquet);
 			}
-
-			//console.log("Unique collections: " + JSON.stringify(uniqueCollections));
-			//console.log("Unique tags: " + JSON.stringify(uniqueTags));
 			
-			console.log("Commiting newBouquetArray: " + JSON.stringify(newBouquetArray));
-
+			commit('setSrps', srps);
 			commit('setBouquets', {bouquets, uniqueTags, uniqueCollections});
 			resolve();
 		}).catch(err => {

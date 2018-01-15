@@ -98,6 +98,7 @@ export default {
 					this.submit();
 					return;
 				}
+				this.showRegisterFail();
 				this.formHasErrors = true;
 			});
 		},
@@ -110,8 +111,10 @@ export default {
 			}).then(user => {
 				this.successfullyRegistered = true;
 				console.log("Successfully registered user " + user);
+				this.showRegisterSuccess();
 			}).catch(res => {
 				this.registerError = res.error;
+				this.showRegisterFail();
 				console.error("Error registering: " + res.error);
 			});
 		},
@@ -119,5 +122,17 @@ export default {
 
 		}
 	},
+	notifications: {
+		showRegisterSuccess: {
+			title: 'Success',
+			message: 'Successfully registered',
+			type: 'success'
+		},
+		showRegisterFail: {
+			title: 'Error',
+			message: 'Failed to register account',
+			type: 'error'
+		}
+	}
 };
 </script>

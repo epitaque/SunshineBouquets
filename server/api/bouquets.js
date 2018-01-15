@@ -79,10 +79,31 @@ function updateBouquet (newBouquet, res) {
 
 module.exports.getBouquets = (req, res) => {
 	db.getBouquets().then(bouquets => {
-		res.status(200).json(bouquets);
+		var promises = [];
+		for(var i = 0; i < bouquets.length; i++) {
+			promises.push(addBouquetSrps(bouquets[i], bouquets));
+		}
+		
+		//console.log("stringified bouquets: " + JSON.stringify(bouquets));
+		Promise.all(promises).then(_ => {
+			res.status(200).json(bouquets);
+		});
 	}).catch(err => {
 		res.status(500).json({error: err});
 	})
+}
+
+function addBouquetSrps(bouquet, bouquets) {
+	bouquet.srps = [];
+	return new Promise((resolve, reject) => {
+		db.getBouquetSrps(bouquet.bouquet_id).then(rows => {
+			for(var j = 0; j < rows.length; j++) {
+				bouquet.srps.push(rows[j]);
+			}
+			resolve();
+			//console.log("Done manipulating bouquet " + bouquet.bouquet_id + ". Result: " + JSON.stringify(bouquet) + ", bouquets array: " + JSON.stringify(bouquets));
+		}).catch(err => reject(err));	
+	});
 }
 
 module.exports.removeBouquet = (req, res) => {

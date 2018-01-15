@@ -1,9 +1,9 @@
 <template>
 	<div style="margin-top: 20px;" class="text-left col-mx-auto column col-6 col-xs-12">
 		<h2>Cart</h2>
-		<div class="col-12" v-if="bouquetIds.length != 0">
+		<div class="col-12" v-if="srpIds.length != 0">
 			<div class="columns">
-				<bouquet v-for="bouquetId in bouquetIds" viewType="cart" :bouquetId="bouquetId">
+				<bouquet v-for="bouquetId in srpIds" viewType="cart" :bouquetId="bouquetId" :key="bouquetId">
 
 				</bouquet>
 			</div>
@@ -18,7 +18,7 @@
 			</div>
 		</div>
 
-		<p class="text-large text-gray" v-if="user != null && bouquetIds.length == 0"> 
+		<p class="text-large text-gray" v-if="user != null && srpIds.length == 0"> 
 			Your cart is empty. Try adding some <router-link to="/bouquets">bouquets</router-link>.
 		</p>
 		<p class="text-large text-gray" v-if="user == null">
@@ -28,12 +28,8 @@
 </template>
 
 <script>
-import Bouquet from '../Bouquets/Bouquet';
 
 export default {
-	components: {
-		'bouquet': Bouquet
-	},
 	data() {
 		return {
 
@@ -43,13 +39,13 @@ export default {
 		cart() {
 			return this.$store.getters.cart;
 		},
-		bouquetIds() {
+		srpIds() {
 			/*var bouquets = [];
-			for(var i = 0; i < this.cart.bouquetIds.length; i++) {
-				bouquets.push(this.$store.getters.bouquet[this.cart.bouquetIds[i]]);
+			for(var i = 0; i < this.cart.srpIds.length; i++) {
+				bouquets.push(this.$store.getters.bouquet[this.cart.srpIds[i]]);
 			}*/
 
-			return this.cart.bouquetIds;
+			return this.cart.srpIds;
 		},
 		user() {
 			return this.$store.getters.getUser

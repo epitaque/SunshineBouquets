@@ -98,23 +98,39 @@ module.exports.getBouquet = (bouquetId) => {
 	});
 }
 
+module.exports.getBouquetSrps = (bouquetId) => {
+	return new Promise((resolve, rejct) => {
+		con.query("SELECT * FROM srps WHERE bouquet_id = ?", bouquetId, (err, rows) => {
+			if (err) reject(err);
+			resolve(rows);
+		});
+	});
+}
+
 module.exports.removeBouquet = (bouquetId) => {
 	console.log("Attempting to delete bouquet " + bouquetId);
 	return new Promise((resolve, reject) => {
 		try {
-			con.query("DELETE FROM bouquets WHERE bouquet_id = ?", bouquetId, (error, result) => {
+			con.query('DELETE FROM srps WHERE bouquet_id = ?', bouquetId, (error, result) => {
 				if(error) {
-					console.log("SQL error removing bouquet " + bouquetId + ", error: " + JSON.stringify(error));
+					console.log("SQL error removing srps with bouquet id " + bouquetId + ", error: " + JSON.stringify(error));
 					reject(error);
 				}
 				else {
-					console.log("Resolving due to success");								
-					resolve(bouquetId);
+					con.query("DELETE FROM bouquets WHERE bouquet_id = ?", bouquetId, (error, result) => {
+						if(error) {
+							console.log("SQL error removing bouquet " + bouquetId + ", error: " + JSON.stringify(error));
+							reject(error);
+						}
+						else {
+							resolve(bouquetId);
+						}
+					});		
 				}
 			});
-			console.log("JS after query");			
 		}
 		catch(err) {
+			reject(err);
 			console.log("Javascript error deleting bouquet");
 		}
 	});

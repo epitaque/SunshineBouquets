@@ -132,11 +132,13 @@ export default {
 				console.log("BouquetService.addBouquet request");
 				this.submitting = false;
 				this.success = true;
+				this.showAddSuccess();
 				this.$store.dispatch('updateBouquets').then(_ => {
 					console.log("Successfully dispatched updateBouquets action");
 					this.$router.push('/bouquets/' + res);
 				});
 			}).catch(err => {
+				this.showAddFail();
 				this.submitting = false;
 				this.submitError = err;
 			});
@@ -164,6 +166,19 @@ export default {
 		bouquet() {
 			return this.$store.getters.tempBouquet;
 		}
+	},
+	notifications: {
+		showAddSuccess: {
+			title: 'Success',
+			message: 'Successfully added bouquet',
+			type: 'success'
+		},
+		showAddFail: {
+			title: 'Error',
+			message: 'Failed to add bouquet',
+			type: 'error'
+		}
 	}
+
 };
 </script>

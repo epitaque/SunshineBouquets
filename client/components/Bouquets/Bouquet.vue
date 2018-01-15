@@ -12,7 +12,7 @@
 					</span>
 				</div>
 				<div class="card-body">
-					<span class="chip" v-for="tag in bouquet.tags">{{tag}}</span>
+					<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
 				</div>
 			</div>
 		</div>
@@ -26,10 +26,10 @@
 					</figure>
 				</div>
 				<div class="tile-content">
-    				<p class="tile-title">{{bouquet.name}}</p>
+    				<p class="tile-title">{{bouquet.name}}</p>	
 					<p>
 						<div class="tile-subtitle text-gray">
-							<span class="chip" v-for="tag in bouquet.tags">{{tag}}</span>
+							<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
 						</div>
 					</p>
 					<p>
@@ -45,28 +45,55 @@
 
 		<!-- Full Page View Type -->
 		<div v-if="viewType=='full'" class="columns">
-			<div v-if="bouquet != null" class="col-3 col-xs-12">
-				<img class="side-image" :src="bouquet.image">
+			<div class="column col-6 col-md-12" v-if="bouquet != null" >
+				<p>{{selectedImage}}</p>
+				<img class="side-image" :src="selectedSrp == -1 ? bouquet.image : bouquet.srps[selectedSrp].image">
 			</div>
-			<div class="col-9 col-xs-12">
+			<div class="column col-6 col-xs-12">
 				<div v-if="bouquet != null">
-					<h2>{{bouquet.name}}</h2>
-					<h3>Description</h3>
-					<p>{{bouquet.description}}</p>
-					<h3>SRPs</h3>
-					<p> to be added... </p>
-					<h3>Tags</h3>
-					<div class="tile-subtitle text-gray">
-						<span class="chip" v-for="tag in bouquet.tags">{{tag}}</span>
+					<div class="text-center">
+						<h2>{{bouquet.name}}</h2>
+						<p class="text-italic">{{bouquet.description}}</p>
 					</div>
-					<h3>Collections</h3>
-					<div class="tile-subtitle text-gray">
-						<span class="chip" v-for="tag in bouquet.collections">{{tag}}</span>
+
+					<div class="divider"></div>
+
+					<div class="columns">
+						<div class="column col-4" v-if="bouquet.tags.length != 0">
+							<div>Tags</div>
+							<div class="tile-subtitle text-gray">
+								<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
+							</div>
+						</div>
+						<div class="column col-4">
+							<div>Pack Size</div>
+							<p>{{bouquet.pack_size}}</p>
+						</div>
+						<div class="column col-4" v-if="bouquet.collections.length != 0">
+							<div>Collections</div>
+							<div class="tile-subtitle text-gray">
+								<span class="chip" v-for="collection in bouquet.collections" :key="collection">{{collection}}</span>
+							</div>
+						</div>
 					</div>
-					<h3>Pack Size</h3>
-					<p>{{bouquet.packSize}}</p>
-					<h3>Date Added</h3>
-					<p>{{new Date(bouquet.date_added).toLocaleDateString()}}</p>
+
+					<div class="divider"></div>
+
+					<div class="text-center">
+						<div class="columns">
+							<div class="column col-4" v-for="(srp, index) in bouquet.srps" :key="srp.srp_id">
+								<SRP viewType="bouquetPage" :id="srp.srp_id" :selected="index == selectedSrp" @clicked="srpSelected(index)"> </SRP>
+							</div>
+						</div>
+					</div>
+
+					<div class="divider"></div>
+					
+					<div class="text-center" >
+						<p v-if="selectedSrp == -1">Select SRP</p>
+						<button type="button" @click="addToCart" class="btn" v-if="selectedSrp != -1">Add to Cart</button>
+					</div>
+
 					<div v-if="isLoggedIn">
 						<button @click="remove" class="btn btn-error">Delete</button> 
 						<button @click="edit" class="btn">Edit</button>
@@ -82,13 +109,17 @@
 
 <script>
 import BouquetService from '../../services/Bouquets';
+import SRP from './SRP';
 
 export default {
 	name: 'bouquet',
 	props: ['bouquetId', 'viewType'],
+	components: { SRP },
 	data() {
 		return {
-			error: ''
+			selectedSrp: -1,
+			error: '',
+			selectedImage: ''
 		}
 	},
 	computed: {
@@ -150,6 +181,14 @@ export default {
 		},
 		edit() {
 			this.$router.push('/bouquets/edit/' + this.bouquetId);
+		},
+		srpSelected(index) {
+			this.selectedSrp = index;
+		},
+	},
+	created() {
+		if(this.bouquet != null) {
+			this.selectedImage = newBouquet.image;
 		}
 	},
 	notifications: {

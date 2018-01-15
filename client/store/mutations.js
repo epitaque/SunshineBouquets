@@ -33,6 +33,10 @@ export const setBouquets = (state, {bouquets, uniqueTags, uniqueCollections}) =>
 	Vue.set(state, 'uniqueCollections', uniqueCollections);	
 }
 
+export const setSrps = (state, srps) => {
+	Vue.set(state, 'srps', srps);
+}
+
 export const updateCartNote = (state, text) => {
 	Vue.set(state.cart, 'note', text);
 }

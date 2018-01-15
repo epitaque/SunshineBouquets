@@ -16,8 +16,16 @@ export const bouquet = (state) => (id) => {
 } 
 
 export const bouquets = (state) => {
-	console.log("Bouquets getter printing state: " + JSON.stringify(state));
 	return state.bouquets;
+}
+
+export const srp = (state) => (id) => {
+	for(var i = 0; i < state.srps.length; i++) {
+		if(state.srps[i].srp_id == id) {
+			return state.srps[i];
+		}
+	}
+	return null;
 }
 
 export const cart = (state) => {
