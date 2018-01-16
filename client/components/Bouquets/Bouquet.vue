@@ -17,37 +17,10 @@
 			</div>
 		</div>
 
-		<!--- Cart View Type -->
-		<div v-if="viewType=='cart'">
-			<div class="tile">
-				<div class="tile-icon">
-					<figure class="avatar avatar-lg">
-						<img :src="bouquet.image">
-					</figure>
-				</div>
-				<div class="tile-content">
-    				<p class="tile-title">{{bouquet.name}}</p>	
-					<p>
-						<div class="tile-subtitle text-gray">
-							<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
-						</div>
-					</p>
-					<p>
-						<button class="btn btn-sm btn-error" v-show="bouquet.inCart" v-on:click="removeFromCart()">
-							Remove
-						</button>
-					</p>
-				</div>
-				<div class="tile-action"> 
-				</div>
-			</div>
-		</div>
-
 		<!-- Full Page View Type -->
 		<div v-if="viewType=='full'" class="columns">
 			<div class="column col-6 col-md-12" v-if="bouquet != null" >
-				<p>{{selectedImage}}</p>
-				<img class="side-image" :src="selectedSrp == -1 ? bouquet.image : bouquet.srps[selectedSrp].image">
+				<img class="side-image" :src="selectedImage">
 			</div>
 			<div class="column col-6 col-xs-12">
 				<div v-if="bouquet != null">
@@ -91,7 +64,8 @@
 					
 					<div class="text-center" >
 						<p v-if="selectedSrp == -1">Select SRP</p>
-						<button type="button" @click="addToCart" class="btn" v-if="selectedSrp != -1">Add to Cart</button>
+						<button v-if="selectedSrp != -1 && selectedSrpInCart" type="button" @click="removeFromCart" class="btn btn-error">Remove from Cart</button>
+						<button v-if="selectedSrp != -1 && !selectedSrpInCart" type="button" @click="addToCart" class="btn btn-success">Add to Cart</button>
 					</div>
 
 					<div v-if="isLoggedIn">
@@ -118,8 +92,7 @@ export default {
 	data() {
 		return {
 			selectedSrp: -1,
-			error: '',
-			selectedImage: ''
+			error: ''
 		}
 	},
 	computed: {
@@ -154,19 +127,35 @@ export default {
 				return 'col-12 bouquetroot';
 			}
 			return '';
+		},
+		selectedImage() {
+			if(this.selectedSrp == -1) {
+				return this.bouquet.image;
+			}
+			var srp = this.bouquet.srps[this.selectedSrp];
+			if(!srp.image || srp.image == '') {
+				return this.bouquet.image;
+			}
+			return this.bouquet.srps[this.selectedSrp].image;
+		},
+		selectedSrpInCart() {
+			return this.$store.getters.cart.srpIds.indexOf(this.bouquet.srps[this.selectedSrp].srp_id) != -1;
 		}
 	},
 	methods: {
 		addToCart() {
 			if(!this.$store.getters.isLoggedIn) {
+				this.showNeedToLogin();
 				this.$router.push('/login');
 			}
 			else {
-				this.$store.commit('addBouquetIdToCart', this.bouquetId);
+				this.$store.commit('addSrpIdToCart', this.bouquet.srps[this.selectedSrp].srp_id);
+				this.showAddToCartSuccess();
 			}
 		},
 		removeFromCart() {
-			this.$store.commit('removeBouquetIdFromCart', this.bouquetId);
+			this.$store.commit('removeSrpIdFromCart', this.bouquet.srps[this.selectedSrp].srp_id);
+			this.showRemoveFromCartSuccess();
 		},
 		remove() {
 			BouquetService.removeBouquet(this.bouquetId)
@@ -186,17 +175,27 @@ export default {
 			this.selectedSrp = index;
 		},
 	},
-	created() {
-		if(this.bouquet != null) {
-			this.selectedImage = newBouquet.image;
-		}
-	},
 	notifications: {
 		showDeleteSuccess: {
 			title: 'Success',
-			message: 'Successfully deleted bouquet',
+			message: 'Deleted bouquet',
 			type: 'success'
-		}
+		},
+		showAddToCartSuccess: {
+			title: 'Success',
+			message: 'Added SRP to cart',
+			type: 'success'
+		},
+		showRemoveFromCartSuccess: {
+			title: 'Success',
+			message: 'Removed SRP from cart',
+			type: 'success'
+		},
+		showNeedToLogin: {
+			title: 'Unable to add to cart',
+			message: 'You must log in to add bouquet SRPs to your cart',
+			type: 'error'
+		},
 	}
 };
 </script>

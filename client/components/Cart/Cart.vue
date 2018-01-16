@@ -1,12 +1,9 @@
 <template>
-	<div style="margin-top: 20px;" class="text-left col-mx-auto column col-6 col-xs-12">
-		<h2>Cart</h2>
+	<div style="margin-top: 20px;" class="text-left col-mx-auto column col-9 col-lg-12">
+		<h2 class="text-center">Cart</h2>
 		<div class="col-12" v-if="srpIds.length != 0">
-			<div class="columns">
-				<bouquet v-for="bouquetId in srpIds" viewType="cart" :bouquetId="bouquetId" :key="bouquetId">
-
-				</bouquet>
-			</div>
+			<SRP v-for="srpId in srpIds" viewType="cart" :id="srpId" :key="srpId">
+			</SRP>
 
 			<div class="form-group">
 				<label class="form-label" for="input-example-3">Note</label>
@@ -28,8 +25,11 @@
 </template>
 
 <script>
+import SRP from '../Bouquets/SRP';
+
 
 export default {
+	components: { SRP },
 	data() {
 		return {
 

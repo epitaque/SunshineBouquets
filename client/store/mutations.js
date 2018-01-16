@@ -9,20 +9,15 @@ export const logout = (state) => {
 	Vue.set(state, 'user', null);
 }
 
-export const addSrpIdToCart = (state, bouquetId) => {
-	Vue.set(state.srps[srpId], 'inCart', true);
-	//state.bouquets[bouquetId].inCart = true;	
+export const addSrpIdToCart = (state, srpId) => {
+	if(state.cart.srpIds.indexOf(srpId) != -1) return;
 	state.cart.srpIds.push(srpId);
 }
 
 export const removeSrpIdFromCart = (state, srpId) => {
-	Vue.set(state.srps[srpId], 'inCart', false);	
-	for(var i = 0; i < state.cart.srpsIds.length; i++) {
-		if(state.cart.srpIds[i] == srpsId) {
-			state.cart.srpsIds.splice(i, 1);
-			return;
-		}
-	}
+	var index = state.cart.srpIds.indexOf(srpId);
+	if(index == -1) return;
+	state.cart.srpIds.splice(index, 1);
 }
 
 export const setBouquets = (state, {bouquets, uniqueTags, uniqueCollections}) => {

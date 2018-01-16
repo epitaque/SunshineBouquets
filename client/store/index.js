@@ -25,7 +25,7 @@ export default new Vuex.Store({
 	getters,
 	mutations,
 	actions,
-	/*plugins: [createPersistedState(), createMutationsSharer({
+	plugins: [createPersistedState(), createMutationsSharer({
 		predicate: ['setUser', 'logout', 'addSrpIdToCart', 'removeSrpIdFromCart', 'updateCartNote']  //(mutation, state) => true
-	})]*/
+	})]
 });
