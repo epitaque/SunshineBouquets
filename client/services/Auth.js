@@ -21,6 +21,7 @@ export default {
 
 	},
 	login(info) { // info: { rememberMe: true, user: {"email": "asdf@fd.co", "password": "asdf"}}
+		console.log("logging in with info: " + JSON.stringify(info));
 		return new Promise((resolve, reject) => {
 			Vue.http.post('/api/auth/login', info)
 			.then(res => {

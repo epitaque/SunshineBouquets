@@ -35,46 +35,100 @@ module.exports.addBouquet = (req, res, next) => {
 }
 
 module.exports.editBouquet = (req, res, next) => {
-	console.log("editBouquet request done. req.body stringified: " + JSON.stringify(req.body));
-	
-	var newBouquet = {
+	console.log("editBouquet request. req.body stringified: " + JSON.stringify(req.body));
+
+	var promises = [];
+
+	for(var i = 0; i < req.body.srps.length; i++) {
+		var reqSrp = JSON.parse(req.body.srps[i]);
+		console.log("Editing SRP[" + i + "]: " + JSON.stringify(reqSrp))
+		promises.push(updateSrp(reqSrp, req.body.bouquet_id, req.files));
+	}
+
+	var bouquetData = {
 		name: req.body.name,
-		price: req.body.price,
-		packSize: req.body.packSize,
 		collections: req.body.collections,
+		pack_size: req.body.pack_size,
 		tags: req.body.tags,
-		id: req.body.id
+		bouquet_id: req.body.bouquet_id
 	};
 
-	console.log("req.body: " + JSON.stringify(req.body));	
-	if(req.body.pictureRemoved == 'true') {
-		console.log("Setting image to ''");
-		deleteBouquetImage(req.body.id).then(_ => {
-			newBouquet.image = '';		
-			updateBouquet(newBouquet, res);			
-		});		
-	}
-	else if(req.body.pictureChanged == 'true' && req.file != null) {
-		console.log("Changing image path, because req.body.pictureChanged = " + req.body.pictureChanged);
-
-		deleteBouquetImage(req.body.id).then(_ => {
-			newBouquet.image = req.file.path;
-			updateBouquet(newBouquet, res);			
+	var bouquetUpdatePromise;
+	if(req.body.pictureRemoved == 'true' || req.body.pictureChanged == 'true') {
+		bouquetData.image = req.body.imageIndex == -1 ? '' : req.files[req.body.imageIndex].path;
+		bouquetUpdatePromise = db.getBouquet(bouquetData.bouquet_id).then(dbBouquet => {
+			return deleteImage(dbBouquet.image);
+		}).then(_ => {
+			return db.updateBouquet(bouquetData);
 		});
 	}
 	else {
-		updateBouquet(newBouquet, res);
+		bouquetUpdatePromise = db.updateBouquet(bouquetData);
 	}
-}
+	promises.push(bouquetUpdatePromise);
 
-function updateBouquet (newBouquet, res) {
-	db.editBouquet(newBouquet).then(id_ => {
+	var deletedSrps = JSON.parse(req.body.deletedSrps);
+	for(var i = 0; i < deletedSrps.length; i++) {
+		var deletedSrpId = Number(deletedSrps[i]);
+		promises.push(deleteSrp(deletedSrpId));
+	}
+
+	Promise.all(promises).then(values => {
 		console.log("Successfully edited bouquet");
-		res.status(200).json({ id: id_ });
+		res.status(200).json({ id: bouquetData.bouquet_id });
 	}).catch(err => {
 		console.log("Unsuccessfully edited bouquet: " + err);		
-		res.status(500).json({error: "Unable to edit bouquet: " + err});	
+		res.status(500).json({error: "Unable to edit bouquet: " + err});		
 	});
+}
+
+function deleteSrp(srpId) {
+	return db.getSrp(srpId).then(srp => {
+		if(srp.image) {
+			return deleteImage(srp.image);
+		}
+	}).then(db.deleteSrp(srpId));
+}
+
+function updateSrp(reqSrp, bouquet_id, files) {
+	var promise;
+	var srpData = {
+		bouquet_id: bouquet_id,
+		name: reqSrp.name,
+		srp: reqSrp.srp,
+		stems: reqSrp.stems,
+	}
+
+	if(reqSrp.pictureRemoved == true || reqSrp.pictureChanged == true) {
+		srpData.image = reqSrp.imageIndex == -1 ? '' : files[reqSrp.imageIndex].path;
+		console.log("Detected picture changed! New path: " + srpData.image);
+	}
+
+	if(reqSrp.new) {
+		console.log("Adding new srp as part of request...");
+		promise = db.addSrp(srpData);
+	}
+	else {
+		srpData.srp_id = reqSrp.srp_id;
+		console.log("Boutta update srp, data: ...");
+		if(reqSrp.pictureRemoved  == true || reqSrp.pictureChanged == true) {
+			promise = db.getSrp(reqSrp.srp_id).then(srp => {
+				var imageUrl = srp.image;
+				console.log("SRP image: " + imageUrl);
+				if(!imageUrl || imageUrl == '') {
+					return;
+				} 
+				return deleteImage(imageUrl);
+			}).then(_ => {
+				return db.editSrp(srpData);
+			});
+		}
+		else {
+			promise = db.editSrp(srpData);
+		}
+	}
+
+	return promise;
 }
 
 module.exports.getBouquets = (req, res) => {
@@ -95,51 +149,60 @@ module.exports.getBouquets = (req, res) => {
 
 function addBouquetSrps(bouquet, bouquets) {
 	bouquet.srps = [];
-	return new Promise((resolve, reject) => {
-		db.getBouquetSrps(bouquet.bouquet_id).then(rows => {
-			for(var j = 0; j < rows.length; j++) {
-				bouquet.srps.push(rows[j]);
-			}
-			resolve();
-			//console.log("Done manipulating bouquet " + bouquet.bouquet_id + ". Result: " + JSON.stringify(bouquet) + ", bouquets array: " + JSON.stringify(bouquets));
-		}).catch(err => reject(err));	
+
+	return db.getBouquetSrps(bouquet.bouquet_id).then(rows => {
+		for(var j = 0; j < rows.length; j++) {
+			bouquet.srps.push(rows[j]);
+		}
+		return;
 	});
 }
 
 module.exports.removeBouquet = (req, res) => {
 	console.log("removeBouquet called");
-	deleteBouquetImage(req.body.id).then(_ => {
-		db.removeBouquet(req.body.id).then(_ => {
-			console.log("In bouquets.js, sending 200 status");
-			res.sendStatus(200).json({id: req.body.id});
-		}).catch(err => {
-			console.log("In bouquets.js, sending 500 status due to error: " + JSON.stringify(err));		
-			res.status(500).json({error: err});
-		});	
-	});	
+	if(!req.body || !req.body.id) {
+		return res.status(500).json({error: 'Unable to delete bouquet; no ID supplied'});
+	}
+	var srpPromises = [];
+	srpPromises.push(
+		db.getBouquetSrps(req.body.id).then(srps => {
+			for(var i = 0; i < srps.length; i++) {
+				var srp = srps[i];
+				if(srp.image) {
+					srpPromises.push(deleteImage(srp.image));
+				}
+			}
+		})
+	);
+
+	Promise.all(srpPromises)
+	.then(db.getBouquet(req.body.id)
+	.then(bouquet => {
+		return deleteImage(bouquet.image);
+	}).then(
+		db.removeBouquet(req.body.id)
+	).catch(err => {
+		res.status(500).json({error: err});
+	}));
 }
 
-function deleteBouquetImage (bouquetId) {
+function deleteImage(incompletePath) {
 	return new Promise((resolve, reject) => {
-		db.getBouquet(bouquetId).then(res => {
-			console.log("Dirname: " + __dirname);
-			console.log("Image: " + res.image);			
-			var url = path.join(__dirname, '../../', res.image);
-	
-			fs.unlink(url, function(err) {
-				if(err && err.code == 'ENOENT') {
-					// file doens't exist
-					resolve();
-					console.info("File at url " + url + " doesn't exist, won't remove it.");
-				} else if (err) {
-					// other errors, e.g. maybe we don't have enough permission
-					console.error("Error occurred while trying to remove file at url " + url);
-					resolve(err);
-				} else {
-					resolve();
-					console.info(`removed file at url ` + url);
-				}
-			});
-		});	
+		var url = path.join(__dirname, '../../', incompletePath);
+		
+		fs.unlink(url, function(err) {
+			if(err && err.code == 'ENOENT') {
+				// file doens't exist
+				resolve();
+				console.info("File at url " + url + " doesn't exist, won't remove it.");
+			} else if (err) {
+				// other errors, e.g. maybe we don't have enough permission
+				console.error("Error occurred while trying to remove file at url " + url + ": " + err);
+				resolve(err);
+			} else {
+				resolve();
+				console.info(`removed file at url ` + url);
+			}
+		});
 	});
 }

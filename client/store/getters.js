@@ -8,7 +8,7 @@ export const isLoggedIn = (state) => {
 
 export const bouquet = (state) => (id) => {
 	for(var i = 0; i < state.bouquets.length; i++) {
-		if(state.bouquets[i].id == id) {
+		if(state.bouquets[i].bouquet_id == id) {
 			return state.bouquets[i];
 		}
 	}
@@ -16,6 +16,10 @@ export const bouquet = (state) => (id) => {
 } 
 
 export const bouquets = (state) => {
+	return state.bouquets;
+}
+
+export const bouquetsFn = (state) => () => {
 	return state.bouquets;
 }
 

@@ -29,7 +29,7 @@
 					<img :src="image" width="150" height="150">
 				</div>
 				<div class="column">
-					<a class="tile-title text-large c-hand" @click="$router.push('/bouquets/' + bouquet.id);">{{bouquet.name}}</a>	
+					<a class="tile-title text-large c-hand" @click="$router.push('/bouquets/' + bouquet.bouquet_id);">{{bouquet.name}}</a>	
 					<p>
 						<div class="tile-subtitle text-italic">
 							<p>{{bouquet.description}}</p>

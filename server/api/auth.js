@@ -44,8 +44,13 @@ module.exports.login = (req, res) => {
 
 	const { EXPIRY, EXPIRY_REMEMBERME, ISSUER, SECRET, COOKIE } = jwtAttributes;	
 
+	console.log("rememberMe: " + rememberMe);
+
 	db.checkUserExists(user).then(result => {
-		var EXP = rememberMe == "true" ? EXPIRY_REMEMBERME : EXPIRY;
+		var EXP = rememberMe == true ? EXPIRY_REMEMBERME : EXPIRY;
+
+		console.log("rememberMe == true " + (rememberMe == true));
+
 		const expires = moment().add(EXP, 'seconds').valueOf();
 		const payload = {
 			exp: expires,

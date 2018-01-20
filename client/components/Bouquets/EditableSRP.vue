@@ -35,10 +35,12 @@
 				<div class="column col-6">
 					<picture-input 
 						ref="pictureInput" 
-						@change="onPictureChange" 
+						@change="onPictureChange"
+						@remove="onPictureRemoved"
 						width="200" 
 						height="200" 
 						margin="16"
+						:prefill="srp.image"
 						:removable="true"
 						accept="image/jpeg,image/png" 
 						size="15" 
@@ -65,10 +67,12 @@ export default {
 				console.log("SRP uninitialized, initializing...");
 
 				srp.bouquet_id = this.bouquetId;
-				srp.image_file = null;
+				srp.imageFile = null;
 				srp.name = '';
 				srp.srp = 0;
 				srp.stems = 1;
+				srp.pictureRemoved = false;
+				srp.pictureChanged = false;
 				srp.initialized = true;
 			}
 
@@ -81,14 +85,20 @@ export default {
 			this.$emit('input', this.srp);
 		},
 		onPictureChange() {
-			console.log('New SRP picture selected!')
+			this.srp.pictureRemoved = false;
+			this.srp.pictureChanged = true;
 			if (this.$refs.pictureInput.image) {
-				this.srp.image_file = this.$refs.pictureInput.file;
+				this.srp.imageFile = this.$refs.pictureInput.file;
 				this.updateValue();
-				console.log('Picture loaded.')
+				console.log('Picture loaded: ' + typeof(this.$refs.pictureInput.file));
 			} else {
 				console.log('FileReader API not supported: use the <form>, Luke!')
 			}
+		},
+		onPictureRemoved() {
+			this.srp.pictureRemoved = true;
+			this.srp.pictureChanged = false;
+			this.updateValue();
 		},
 		remove() {
 			this.$emit('deleted');

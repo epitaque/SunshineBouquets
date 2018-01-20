@@ -8,8 +8,6 @@ import createMutationsSharer from 'vuex-shared-mutations'
 
 Vue.use(Vuex);
 
-//import getMockData from './mockData';
-
 export default new Vuex.Store({
 	state: {
 		user: null,
@@ -19,6 +17,7 @@ export default new Vuex.Store({
 			srpIds: [],
 			note: ""
 		},
+		collections: [],
 		uniqueCollections: [], 
 		uniqueTags: [],
 	},

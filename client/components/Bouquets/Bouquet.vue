@@ -8,7 +8,7 @@
 				</div>
 				<div class="card-header">
 					<span class="toprow">
-						<router-link :to="'/bouquets/' + bouquet.id"><h4 class="card-title h5">{{bouquet.name}}</h4></router-link>
+						<router-link :to="'/bouquets/' + bouquet.bouquet_id"><h4 class="card-title h5">{{bouquet.name}}</h4></router-link>
 					</span>
 				</div>
 				<div class="card-body">

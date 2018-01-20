@@ -16,7 +16,6 @@ export function updateBouquets({ commit }) {
 					srps.push(bouquet.srps[j]);
 				}
 
-				bouquet.id = bouquet.bouquet_id;
 				bouquet.tags = bouquet.tags.length == 0 ? [] : bouquet.tags.split(',');
 				bouquet.collections = bouquet.collections.length == 0 ? [] : bouquet.collections.split(',');
 				bouquet.date_added = new Date(bouquet.date_added);

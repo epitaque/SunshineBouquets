@@ -18,7 +18,7 @@
 			</div>
 			<div class="col-12">
 				<div class="columns">
-					<bouquet :key="bouquet.id" viewType="card" v-for="bouquet in displayedBouquets" :bouquetId="bouquet.id">
+					<bouquet :key="bouquet.bouquet_id" viewType="card" v-for="bouquet in displayedBouquets" :bouquetId="bouquet.bouquet_id">
 
 					</bouquet>
 				</div>
