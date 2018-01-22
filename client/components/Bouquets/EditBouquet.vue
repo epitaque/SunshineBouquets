@@ -73,7 +73,7 @@
 
 <script>
 import PictureInput from '../Utility/PictureInput';
-import InputTag from './InputTag'
+import InputTag from '../Utility/InputTag'
 import BouquetService from '../../services/Bouquets';
 import EditableSRP from './EditableSRP';
 

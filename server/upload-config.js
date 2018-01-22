@@ -44,3 +44,28 @@ module.exports.resizer = (req, res, next) => {
 		res.status(500).json({ error: "Unable to upload files" });
 	});
 }
+
+module.exports.bannerResizer = (req, res, next) => {
+	var files = req.files;
+
+	console.log("resizer received file data");
+	var promises = [];
+	for(var i = 0; i < files.length; i++) {
+		var file = files[i];
+		var fileName = Math.floor(Math.random() * 1000000000) + '.png';
+		var partialDestination = '\\uploads\\images\\' + fileName;
+		var fullDestination = path.join(__dirname, '../' + partialDestination);
+		var promise = sharp(file.buffer)
+			.resize(1000, 250)
+			.toFile(fullDestination);
+		file.path = partialDestination;
+		promises.push(promise);
+	}
+	
+	Promise.all(promises).then(_ => {
+		next();
+	}).catch(error => {
+		console.error("Error in resizing files: error");
+		res.status(500).json({ error: "Unable to upload files" });
+	});
+}

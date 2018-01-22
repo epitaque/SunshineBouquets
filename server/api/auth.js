@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 //const tokens = require('../tokens');
 
-module.exports.registerUser = (req, res) => {
+module.exports.registerUser = function (req, res) {
 	var body = req.body;
 	var user = body;
 
@@ -19,7 +19,7 @@ module.exports.registerUser = (req, res) => {
 	});
 }
 
-module.exports.validateEmail = (req, res) => {
+module.exports.validateEmail = function (req, res) {
 	var email = req.headers['email'];
 	db.validateEmail(email).then(result => {
 		res.status(200).json({success: "Email is valid."});
@@ -38,7 +38,7 @@ const jwtAttributes = {
 };
 
 // issues JWT
-module.exports.login = (req, res) => {
+module.exports.login = function (req, res) {
 	var user = req.body.user;
 	var rememberMe = req.body.rememberMe;
 
@@ -71,7 +71,7 @@ module.exports.login = (req, res) => {
 	});
 }	
 
-module.exports.validate = (req, res, next) => {
+module.exports.validate = function (req, res, next) {
 	const { COOKIE, SECRET } = jwtAttributes;
 
 	console.log("Request cookies: " + JSON.stringify(req.cookies));
@@ -93,7 +93,7 @@ module.exports.validate = (req, res, next) => {
 	}
 }
 
-module.exports.logout = (req, res) => {
+module.exports.logout = function (req, res) {
 	const { COOKIE } = jwtAttributes;
 	
 	const token = req.cookies[COOKIE];	

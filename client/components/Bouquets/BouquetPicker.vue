@@ -1,34 +1,35 @@
 <template>
-	<div class="container">
-		<div class="columns">
-			<div class="filters col-12">
-				<div style="display: flex">
-					<div class="col-3 col-sm-6">
-						<input-tag placeholder="Search Tags" :on-change="onInputChange" :tags="tagsArray"></input-tag>
-					</div>
-					<div class="col-3 col-ml-auto" v-if="user != null">
-						<div style="float: right">
-							<router-link to="/bouquets/add">
-								<button class="btn btn-primary">
-								<i class="icon icon-plus"></i> Add Bouquet</button>
-							</router-link>
+	<div class="modal" :class="{ active: modalActive }">\
+		<a @click="$emit('close')" class="modal-overlay" aria-label="Close"></a>
+		<div class="modal-container">
+			<div class="modal-header">
+				<a @click="$emit('close')" class="btn btn-clear float-right" aria-label="Close"></a>
+				<div class="modal-title h5">Select a Bouquet</div>
+			</div>
+			<div class="modal-body">
+				<div class="columns">
+					<div class="filters col-12">
+						<div style="display: flex">
+							<div class="col-3 col-sm-6">
+								<input-tag placeholder="Search Tags" :on-change="onInputChange" :tags="tagsArray"></input-tag>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="col-12">
-				<div class="columns">
-					<bouquet :key="bouquet.bouquet_id" viewType="card" v-for="bouquet in displayedBouquets" :bouquetId="bouquet.bouquet_id">
+					<div class="col-12">
+						<div class="columns">
+							<bouquet :key="bouquet.bouquet_id" viewType="clickable-card" v-for="bouquet in displayedBouquets" :bouquetId="bouquet.bouquet_id" @clicked="onBouquetClicked(bouquet.bouquet_id)">
 
-					</bouquet>
+							</bouquet>
+						</div>
+						<div v-infinite-scroll="loadMore"  infinite-scroll-disabled="false" infinite-scroll-distance="20">
+							<p class="text-secondary">.</p>
+						</div>
+						<div v-if="busy" class="loading loading-lg"></div>
+						<p v-if="!busy && displayedBouquets.length == 0" class="text-gray">No bouquets matched your query.</p>
+					</div>
 				</div>
-				<div v-infinite-scroll="loadMore"  infinite-scroll-disabled="false" infinite-scroll-distance="20">
-					<p class="text-secondary">.</p>
-				</div>
-				<div v-if="busy" class="loading loading-lg"></div>
-				<p v-if="!busy && displayedBouquets.length == 0" class="text-gray">No bouquets matched your query.</p>
 			</div>
-		</div> 
+		</div>
 	</div>
 </template>
 
@@ -38,6 +39,7 @@ import infiniteScroll from 'vue-infinite-scroll'
 import InputTag from '../Utility/InputTag'
 
 export default {
+	props: ['modalActive', 'excludedBouquetIds'],
 	components: {
 		'bouquet': Bouquet,
 		InputTag
@@ -59,7 +61,7 @@ export default {
 			for(var i = 0; i < this.$store.getters.bouquets.length; i++) {
 				//ensure that the bouquet matches all tags
 				var bouquet = this.$store.getters.bouquets[i];
-				if(this.matchesQuery(bouquet, this.tagsArray)) {
+				if(this.matchesQuery(bouquet, this.tagsArray) && !this.excludedBouquetIds.includes(bouquet.bouquet_id)) {
 					a.push(bouquet);
 				}
 			}
@@ -114,6 +116,16 @@ export default {
 			this.displayedBouquets = [];
 			this.loadMore();
 			console.log("Input changed!");
+		},
+		onBouquetClicked(id) {
+			console.log('bouquet clicked: ' + id);
+			this.$emit('bouquetClicked', id);
+		}
+	},
+	watch: {
+		modalActive() {
+			this.displayedBouquets = [];
+			this.loadMore();
 		}
 	},
 	created() {

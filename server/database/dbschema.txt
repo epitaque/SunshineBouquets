@@ -38,20 +38,18 @@ CREATE TABLE collections (
 	collection_id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(50),
 	description varchar(500),
-	banner_image varchar(50) NOT NULL,
+	banner_image varchar(50),
 	date_added datetime NOT NULL,
 
 	PRIMARY KEY(collection_id)
 );
 
-CREATE TABLE collection_item (
+CREATE TABLE collection_items (
 	collection_item_id int(11) NOT NULL AUTO_INCREMENT,
-	collection_id int(11) NOT NULL,
 	bouquet_id int(11) NOT NULL,
-	srp_id int(11),
+	collection_id int(11) NOT NULL,
 
 	PRIMARY KEY(collection_item_id),
 	FOREIGN KEY(bouquet_id) REFERENCES bouquets(bouquet_id),
-	FOREIGN KEY(collection_id) REFERENCES collections(collection_id),
-	FOREIGN KEY(srp_id) REFERENCES srps(srp_id)
-)
+	FOREIGN KEY(collection_id) REFERENCES collections(collection_id)
+);

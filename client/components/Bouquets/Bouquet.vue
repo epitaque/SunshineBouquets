@@ -1,5 +1,5 @@
 <template>
-	<div :class="rootClassString">
+	<div :class="rootClassString" @click="rootClicked">
 		<!-- Card View Type -->
 		<div v-if="viewType=='card'">
 			<div class="card">
@@ -9,6 +9,22 @@
 				<div class="card-header">
 					<span class="toprow">
 						<router-link :to="'/bouquets/' + bouquet.bouquet_id"><h4 class="card-title h5">{{bouquet.name}}</h4></router-link>
+					</span>
+				</div>
+				<div class="card-body">
+					<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
+				</div>
+			</div>
+		</div>
+
+		<div v-if="viewType=='clickable-card'">
+			<div class="card">
+				<div class="card-image">
+					<img :src="bouquet.image" class="img-responsive">
+				</div>
+				<div class="card-header">
+					<span class="toprow">
+						<h4 class="card-title h5">{{bouquet.name}}</h4>
 					</span>
 				</div>
 				<div class="card-body">
@@ -98,15 +114,6 @@ export default {
 	computed: {
 		bouquet() {
 			var bouquet = this.$store.getters.bouquet(this.bouquetId);
-			/*var bouquet = {
-				bouquet_id: 1,
-				name: 'Liliac Flowers',
-				description: 'A wonderful addition to any holiday celebration, the liliac flower symbolizes love.',
-				image: '/resource/genericflower.jpg',
-				collections: ['Holidays'],
-				tags: ['warm', 'cozy'],
-				date_added: new Date()
-			};*/
 			if(bouquet == null) {
 				this.error = 'bouquet #'+ this.bouquetId + ' does not exist.';
 				return null;
@@ -120,13 +127,17 @@ export default {
 			return this.$store.getters.isLoggedIn
 		},
 		rootClassString() {
-			if(this.viewType == 'card') {
-				return 'column col-3 col-md-4 col-sm-6 col-xs-12 bouquetroot';
+			var classStr = '';
+			if(this.viewType == 'card' || this.viewType == 'clickable-card') {
+				classStr += 'column col-3 col-md-4 col-sm-6 col-xs-12 bouquetroot';
+			}
+			if(this.viewType == 'clickable-card') {
+				classStr += ' c-hand'
 			}
 			if(this.viewType == 'cart') {
-				return 'col-12 bouquetroot';
+				classStr += 'col-12 bouquetroot';
 			}
-			return '';
+			return classStr;
 		},
 		selectedImage() {
 			if(this.selectedSrp == -1) {
@@ -174,6 +185,9 @@ export default {
 		srpSelected(index) {
 			this.selectedSrp = index;
 		},
+		rootClicked() {
+			this.$emit('clicked');
+		}
 	},
 	notifications: {
 		showDeleteSuccess: {

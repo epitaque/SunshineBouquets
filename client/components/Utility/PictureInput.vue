@@ -128,7 +128,7 @@ export default {
     },
     zIndex: {
       type: Number,
-      default: 10000
+      default: 0
     },
     alertOnError: {
       type: Boolean,
@@ -556,7 +556,7 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 10001;
+  z-index: 0;
   box-sizing: border-box;
   background-color: rgba(200,200,200,.25);
 }
@@ -565,7 +565,7 @@ export default {
 }
 .picture-inner {
   position: relative;
-  z-index: 10002;
+  z-index: 1;
   pointer-events: none;
   box-sizing: border-box;
   margin: 1em auto;

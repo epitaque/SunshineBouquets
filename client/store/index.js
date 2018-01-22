@@ -8,6 +8,7 @@ import createMutationsSharer from 'vuex-shared-mutations'
 
 Vue.use(Vuex);
 
+
 export default new Vuex.Store({
 	state: {
 		user: null,

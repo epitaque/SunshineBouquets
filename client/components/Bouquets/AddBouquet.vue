@@ -68,7 +68,7 @@
 
 <script>
 import PictureInput from 'vue-picture-input'
-import InputTag from './InputTag'
+import InputTag from '../Utility/InputTag'
 import BouquetService from '../../services/Bouquets';
 import EditableSRP from './EditableSRP';
 
@@ -120,7 +120,7 @@ export default {
 		},
 		submit() {
 			this.submitting = true;
-			BouquetService.addBouquet({
+			var bouquet = {
 				name: this.name,
 				image: this.image,
 				packSize: this.packSize,
@@ -128,7 +128,9 @@ export default {
 				description: this.description,
 				tags: this.tagsArray,
 				srps: this.srps
-			}).then(res => {
+			};
+
+			BouquetService.addBouquet(bouquet).then(res => {
 				console.log("BouquetService.addBouquet request");
 				this.submitting = false;
 				this.success = true;
@@ -159,12 +161,6 @@ export default {
 		},
 		uniqueCollections() {
 			return this.$store.state.uniqueCollections;
-		},
-		srpIds() {
-			return this.$store.getters.tempSrpKeys;
-		},
-		bouquet() {
-			return this.$store.getters.tempBouquet;
 		}
 	},
 	notifications: {

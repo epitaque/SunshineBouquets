@@ -18,6 +18,7 @@ export default {
 	},
 	created() {
 		this.$store.dispatch('updateBouquets');
+		this.$store.dispatch('updateCollections');
 	}
 };
 </script>

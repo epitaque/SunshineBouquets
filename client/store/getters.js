@@ -19,6 +19,19 @@ export const bouquets = (state) => {
 	return state.bouquets;
 }
 
+export const collection = (state) => (id) => {
+	for(var i = 0; i < state.collections.length; i++) {
+		if(state.collections[i].collection_id == id) {
+			return state.collections[i];
+		}
+	}
+	return null;
+}
+
+export const collections = (state) => {
+	return state.collections;
+}
+
 export const bouquetsFn = (state) => () => {
 	return state.bouquets;
 }

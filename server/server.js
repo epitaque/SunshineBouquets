@@ -8,7 +8,9 @@ var compression = require('compression')
 var db = require('./database/init'); db.init();
 var userDB = require('./database/users');
 var bouquetDB = require('./database/bouquets');
+var collectionsDB = require('./database/collections');
 var bouquets = require('./api/bouquets');
+var collections = require('./api/collections');
 var auth = require('./api/auth');
 var upload = require('./upload-config');
 var app = express();
@@ -27,13 +29,20 @@ app.post('/api/auth/register', auth.registerUser);
 app.post('/api/auth/login', auth.login);
 app.post('/api/auth/logout', auth.logout);
 
+app.get('/api/bouquets', bouquets.getBouquets);
 app.post('/api/bouquets/add', 			auth.validate, upload.multer, bouquets.addBouquet);
 app.post('/api/bouquets/addwithimage',  auth.validate, upload.multer, upload.resizer, bouquets.addBouquet);
 app.post('/api/bouquets/edit', 			auth.validate, upload.multer, bouquets.editBouquet);
 app.post('/api/bouquets/editwithimage', auth.validate, upload.multer, upload.resizer, bouquets.editBouquet);
+app.post('/api/bouquets/delete', 		auth.validate, bouquets.removeBouquet);
 
-app.post('/api/bouquets/delete', auth.validate, bouquets.removeBouquet);
-app.get('/api/bouquets', bouquets.getBouquets);
+app.get('/api/collections', collections.getCollections)
+app.post('/api/collections/add', 		 	auth.validate, upload.multer, collections.addCollection);
+app.post('/api/collections/addwithimage',	auth.validate, upload.multer, upload.bannerResizer, collections.addCollection);
+app.post('/api/collections/edit', 			auth.validate, upload.multer, collections.editCollection);
+app.post('/api/collections/editwithimage',	auth.validate, upload.multer, upload.bannerResizer, collections.editCollection);
+
+
 app.get('/api/profile', auth.validate, (req, res) => { res.json({ user: req.decoded.name, email: req.decoded.email }); });
 
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 

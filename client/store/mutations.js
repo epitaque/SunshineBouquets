@@ -28,6 +28,10 @@ export const setBouquets = (state, {bouquets, uniqueTags, uniqueCollections}) =>
 	Vue.set(state, 'uniqueCollections', uniqueCollections);	
 }
 
+export const setCollections = (state, collections) => {
+	Vue.set(state, 'collections', collections);
+}
+
 export const setSrps = (state, srps) => {
 	Vue.set(state, 'srps', srps);
 }
