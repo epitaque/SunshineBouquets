@@ -164,14 +164,15 @@ export default {
 				console.log("Got here, response: " + JSON.stringify(res));
 
 				if(res.status == 200) {
-					resolve(bouquetId);
+					resolve();
 				}
 				else {
+					console.error("Error removing bouquet: " + res.error);
 					reject({"error": res.error});
 				}
 			}).catch(error => {
 				reject('Failed to remove bouquet.');
-				console.error("Error sending remove bouquet request err: ", error);
+				console.error("Error sending remove bouquet request err: " + error);
 			});
 		});
 	}

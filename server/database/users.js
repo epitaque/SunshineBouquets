@@ -18,6 +18,7 @@ module.exports.doesEmailExist = (email) => {
 				reject(err);
 			}
 			else if (rows.length == 0) {
+				console.log("Email doesn't exist...")
 				resolve(false);
 			}
 			else {
@@ -35,7 +36,7 @@ module.exports.validateEmail = (email) => {
 			reject("Invalid email.");
 		}
 		else {
-			doesEmailExist(email).then(result => {
+			module.exports.doesEmailExist(email).then(result => {
 				if(result == false) {
 					console.log("validateEmail resolved");									
 					resolve();
@@ -65,7 +66,7 @@ module.exports.validateUser = (user, result) => {
 		resolve();	
 	}).then(() => {
 		console.log("validateUser returning validateEmail");		
-		return validateEmail(user.email);
+		return module.exports.validateEmail(user.email);
 	});
 }
 

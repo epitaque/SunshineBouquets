@@ -173,13 +173,15 @@ module.exports.removeBouquet = function (req, res) {
 	);
 
 	Promise.all(srpPromises)
-		.then(db.getBouquet(req.body.id)
-			.then(bouquet => {
-				return utility.deleteImage(bouquet.image);
-			}).then(
-			db.removeBouquet(req.body.id)
-			).catch(err => {
-				res.status(500).json({ error: err });
-			}));
+	.then(db.getBouquet(req.body.id)
+	.then(bouquet => {
+		return utility.deleteImage(bouquet.image);
+	}).then(db.removeBouquet(req.body.id))
+	.then(_ => {
+		res.sendStatus(200);
+	})
+	.catch(err => {
+		res.status(500).json({ error: err });
+	}));
 }
 

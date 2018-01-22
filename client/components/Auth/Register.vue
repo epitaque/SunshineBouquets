@@ -5,7 +5,7 @@
             <div class="form-group">
                 <label class="form-label" for="s_name">Name</label>
                 <div class="has-icon-left">
-                    <input name="name" v-validate="'required|alpha_spaces|max:64|min:4'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('name'), 'is-success': fields.name.valid }" type="text" class="form-input" id="s_name" v-model="name" placeholder="John Smith">
+                    <input name="name" v-validate="'required|alpha_spaces|max:64|min:4'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('name'), 'is-success': fields.name && fields.name.valid }" type="text" class="form-input" id="s_name" v-model="name" placeholder="John Smith">
                     <i class="form-icon icon icon-people"></i>
                 </div>
                 <p v-show="errors.has('name')" class="form-input-hint text-error">{{ errors.first('name') }}</p>
@@ -14,7 +14,7 @@
             <div class="form-group">
                 <label class="form-label" for="s_email">Email</label>
                 <div class="has-icon-left">
-                    <input name="email" v-validate="'required|email|email_exists'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('email'), 'is-success': fields.email.valid }" type="email" class="form-input" id="s_email" v-model="email" placeholder="example@sunshinebouquet.com">
+                    <input name="email" v-validate="'required|email|email_exists'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('email'), 'is-success': fields.email && fields.email.valid }" type="email" class="form-input" id="s_email" v-model="email" placeholder="example@sunshinebouquet.com">
                     <i class="form-icon icon icon-mail"></i>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label class="form-label" for="s_password">Password</label>
                 <div class="has-icon-left">
-                    <input name="password" v-validate="'required|min:6|confirmed:confirmedpassword'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('password'), 'is-success': fields.password.valid }" type="password" class="form-input" id="s_password" v-model="password" placeholder="Password">
+                    <input name="password" v-validate="'required|min:6|confirmed:confirmedpassword'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('password'), 'is-success': fields.password && fields.password.valid }" type="password" class="form-input" id="s_password" v-model="password" placeholder="Password">
                     <i class="form-icon icon icon-link"></i>
                 </div>
             </div>
@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label class="form-label" for="s_password">Confirm Password</label>
                 <div class="has-icon-left">
-                    <input name="confirmedpassword" v-validate="'required'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('password'), 'is-success': fields.password.valid }" type="password" class="form-input" placeholder="Confirm Password">
+                    <input name="confirmedpassword" v-validate="'required'" data-vv-delay="1000" :class="{'input': true, 'is-error': errors.has('password'), 'is-success': fields.password && fields.password.valid }" type="password" class="form-input" placeholder="Confirm Password">
                     <i class="form-icon icon icon-link"></i>
                 </div>
             </div>

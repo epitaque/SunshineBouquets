@@ -3,7 +3,9 @@ var path = require('path');
 
 module.exports.deleteImage = function (incompletePath) {
 	return new Promise((resolve, reject) => {
-		var url = path.join(__dirname, '../../', incompletePath);
+		var url = path.join(__dirname, '../', incompletePath);
+
+		console.log("Attempting to delete image at path " + url);
 
 		fs.unlink(url, function (err) {
 			if (err && err.code == 'ENOENT') {

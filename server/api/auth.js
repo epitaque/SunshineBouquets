@@ -22,8 +22,10 @@ module.exports.registerUser = function (req, res) {
 module.exports.validateEmail = function (req, res) {
 	var email = req.headers['email'];
 	db.validateEmail(email).then(result => {
+		console.log("Successfully validated email");
 		res.status(200).json({success: "Email is valid."});
 	}).catch(err => {
+		console.log("Error validating email: " + err);
 		res.status(200).json({error: err});		
 	});
 }
