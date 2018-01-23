@@ -3,7 +3,6 @@ import Vue from 'vue';
 export default {
 	addCollection(collection) {
 		return new Promise((resolve, reject) => {
-			console.log("Adding collection...");
 
 			var formData = new FormData();
 			var apiUrl = '/api/collections/add';
@@ -13,7 +12,7 @@ export default {
 
 			formData.append('name', collection.name);
 			formData.append('description', collection.description);	
-			if(collection.image) { 
+			if(collection.imageFile) { 
 				formData.append('images[]', collection.imageFile); 
 				formData.append('imageIndex', imageIndex++);
 				containsImages = true;								
@@ -31,6 +30,7 @@ export default {
 			if(containsImages) {
 				apiUrl += 'withimage';				
 			}
+			console.log("Adding collection. ApiURL: " + apiUrl);
 
 			Vue.http.post(apiUrl, formData, 
 				{ headers: { 'Content-Type': 'multipart/form-data' }
@@ -136,6 +136,7 @@ export default {
 			Vue.http.get('/api/collections')
 			.then(res => {
 				if(res && res.status == 200 && res.body) {
+					console.log(JSON.stringify(res.body));
 					resolve(res.body);
 				} else {
 					reject("Unable to get collections.");					

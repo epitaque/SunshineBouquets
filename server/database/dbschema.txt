@@ -38,7 +38,7 @@ CREATE TABLE collections (
 	collection_id int(11) NOT NULL AUTO_INCREMENT,
 	name varchar(50),
 	description varchar(500),
-	banner_image varchar(50),
+	image varchar(50),
 	date_added datetime NOT NULL,
 
 	PRIMARY KEY(collection_id)

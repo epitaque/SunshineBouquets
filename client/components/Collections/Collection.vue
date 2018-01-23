@@ -17,16 +17,24 @@
 		</div>
 
 		<div v-if="viewType=='full'">
-			<div class="columns">
-				<div class="column col-6">
-					
-				</div>
-				<div class="banner-container column col-9" v-bind:style="{ backgroundImage: ('url(' + collection.image + ')') }">
+			<div class="columns" v-if="collection != null">
+				<div class="banner-container column col-9" v-bind:style="imageStyle">
 					<div class="text-container">
 						<h2 style="color:white;">{{collection.name}}</h2>
 						<p style="color:white;" class="text-italic">{{collection.description}}</p>
 					</div>
 				</div>
+			</div>
+			<div class="columns" style="margin-top: 20px;">
+				<Bouquet :key="bouquet.bouquet_id" viewType="card" v-for="bouquet in displayedBouquets" :bouquetId="bouquet.bouquet_id">
+
+				</Bouquet>
+			</div>
+			<p v-if="collection == null" class="text-gray text-center text-large">Collection does not exist.</p>
+
+			<div class="float-right">
+				<button type="button" class="btn btn-error" @click="deleteCollection">Delete Collection</button>
+				<button type="button" class="btn btn-primary" @click="$router.push('/collections/edit/' + collectionId);">Edit Collection</button>
 			</div>
 		</div>
 
@@ -35,14 +43,18 @@
 </template>
 
 <script>
+import Bouquet from '../Bouquets/Bouquet';
+
 export default {
 	name: 'collection',
 	props: ['collectionId', 'viewType'],
+	components: { Bouquet },
 	data() {
 		return {};
 	},
 	computed: {
 		collection() {
+			console.log("Collection in component: " + JSON.stringify(this.$store.getters.collection(this.collectionId)));
 			return this.$store.getters.collection(this.collectionId);
 		},
 		rootClassString() {
@@ -54,6 +66,38 @@ export default {
 			}
 			return '';
 		},
+		displayedBouquets() {
+			var bouquets = [];
+			for(var i = 0; i < this.collection.collection_items.length; i++) {
+				bouquets.push(this.$store.getters.bouquet(this.collection.collection_items[i].bouquet_id));
+			}
+			return bouquets;
+		},
+		imageStyle() {
+			if(!this.collection) return {};
+			var formatted = JSON.stringify(this.collection.image);
+			console.log('this.collection.image: ' + formatted);
+			return { 
+				backgroundImage: 'url(' + formatted + ')' 
+			}
+		}
+	},
+	methods: {
+		deleteCollection() {
+			this.showDeleteSuccess();
+		}
+	},
+	notifications: {
+		showDeleteSuccess: {
+			title: 'Success',
+			message: 'Deleted collection',
+			type: 'success'
+		},
+		showDeleteError: {
+			title: 'Error',
+			message: 'Unable to delete collection',
+			type: 'error'
+		}
 	}
 };
 </script>

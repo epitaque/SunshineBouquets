@@ -46,7 +46,9 @@ export function updateCollections({ commit }) {
 		for(var i = 0; i < collections.length; i++) {
 			var collection = collections[i];
 
-			if(collection.image = '') {
+			console.log("collection: " + JSON.stringify(collection));
+
+			if(collection.image == '') {
 				collection.image = '/resource/defaultbanner.jpg';
 			}
 		}

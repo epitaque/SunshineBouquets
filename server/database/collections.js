@@ -7,11 +7,12 @@ module.exports.addCollection = function (collection) {
 			description: collection.description,
 			date_added: new Date(),
 		}
-		if (collection.banner_image) {
-			collectionData.banner_image = collection.banner_image;
+		if (collection.image) {
+			collectionData.image = collection.image;
 		}
 		con.query('INSERT INTO collections SET ?', collectionData, function (error, result) {
 			if (error) {
+				console.log('Error adding collection to database: ' + error);
 				reject(error);
 			}
 			else {
@@ -64,13 +65,10 @@ module.exports.getCollections = function () {
 				reject(err);
 			}
 			else {
-				console.log("Resolving rows: " + JSON.stringify(rows));
 				resolve(rows);
 			}
 		});
 	}).then(collections => {
-
-		console.log("collections: " + JSON.stringify(collections));
 
 		return new Promise((resolve, reject) => {
 			con.query('SELECT * FROM collection_items', function (error, items) {
@@ -89,7 +87,6 @@ module.exports.getCollections = function () {
 							}
 						}
 					}
-					console.log("returning collections: " + JSON.stringify(collections));
 					resolve(collections);
 				}
 			});
@@ -131,14 +128,16 @@ module.exports.getCollectionItems = function (collectionId) {
 module.exports.addCollectionItem = function (collectionItem) {
 	return new Promise((resolve, reject) => {
 		if (!collectionItem.collection_id) {
+			console.log('Error adding collection item: ' + 'No collection id provided');
 			return reject("No collection id provided.");
 		}
 		var collectionItemData = {
 			collection_id: collectionItem.collection_id,
 			bouquet_id: collectionItem.bouquet_id,
 		}
-		con.query('INSERT INTO collection_items SET ?', collectionData, function (error, result) {
+		con.query('INSERT INTO collection_items SET ?', collectionItemData, function (error, result) {
 			if (error) {
+				console.log('Error adding collection item: ' + error);
 				reject(error);
 			}
 			else {

@@ -42,6 +42,7 @@ module.exports.addCollection = function (req, res) {
 	}).then(values => {
 		res.status(200).json({ id: collectionId_ });
 	}).catch(error => {
+		console.log('Error adding collection: ' + error);
 		res.status(500).json({ error })
 	});
 }
