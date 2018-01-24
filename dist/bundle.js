@@ -20154,10 +20154,10 @@ if (false) {(function () {
 				console.log("Got here, response: " + JSON.stringify(res));
 
 				if(res.status == 200) {
-					resolve(collectionId);
+					resolve();
 				}
 				else {
-					reject({"error": res.error});
+					reject(res.error);
 				}
 			}).catch(error => {
 				reject('Failed to remove collection.');
@@ -25597,6 +25597,9 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -25640,6 +25643,10 @@ if (false) {(function () {
 
       if (this.viewType == 'clickable-card') {
         classStr += ' c-hand';
+      }
+
+      if (this.viewType == 'creation') {
+        classStr += 'column col-4 col-md-6 col-xs-12 bouquetroot';
       }
 
       if (this.viewType == 'cart') {
@@ -25745,7 +25752,7 @@ var render = function() {
     "div",
     { class: _vm.rootClassString, on: { click: _vm.rootClicked } },
     [
-      _vm.viewType == "card"
+      _vm.viewType == "card" || _vm.viewType == "creation"
         ? _c("div", [
             _c("div", { staticClass: "card" }, [
               _c("div", { staticClass: "card-image" }, [
@@ -25782,7 +25789,20 @@ var render = function() {
                     _vm._v(_vm._s(tag))
                   ])
                 })
-              )
+              ),
+              _vm._v(" "),
+              _vm.viewType == "creation"
+                ? _c("div", { staticClass: "card-footer" }, [
+                    _c("i", {
+                      staticClass: "icon icon-cross c-hand",
+                      on: {
+                        click: function($event) {
+                          _vm.$emit("remove")
+                        }
+                      }
+                    })
+                  ])
+                : _vm._e()
             ])
           ])
         : _vm._e(),
@@ -28441,7 +28461,13 @@ if (false) {(function () {
     },
 
     deleteSrp(index) {
-      this.deletedSrps.push(this.bouquet.srps[index].srp_id);
+      for (var i = 0; i < this.vuexBouquet.srps.length; i++) {
+        if (this.vuexBouquet.srps[i].srp_id == this.bouquet.srps[index].srp_id) {
+          this.deletedSrps.push(this.bouquet.srps[index].srp_id);
+          console.log('adding deleted srp: ' + this.bouquet.srps[index].srp_id);
+        }
+      }
+
       this.bouquet.srps.splice(index, 1);
     },
 
@@ -28471,7 +28497,7 @@ if (false) {(function () {
           this.updateInitialization();
         }
       });
-    } else {}
+    }
 
     console.log("this.bouquet: " + this.bouquet);
   },
@@ -30015,6 +30041,7 @@ if (false) {(function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Bouquets_Bouquet__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_Collections__ = __webpack_require__(16);
 //
 //
 //
@@ -30059,6 +30086,9 @@ if (false) {(function () {
 //
 //
 //
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'collection',
@@ -30068,7 +30098,9 @@ if (false) {(function () {
   },
 
   data() {
-    return {};
+    return {
+      apiError: ''
+    };
   },
 
   computed: {
@@ -30111,7 +30143,14 @@ if (false) {(function () {
   },
   methods: {
     deleteCollection() {
-      this.showDeleteSuccess();
+      __WEBPACK_IMPORTED_MODULE_1__services_Collections__["a" /* default */].removeCollection(this.collectionId).then(_ => {
+        this.$store.dispatch('updateCollections');
+        this.$router.push('/collections/');
+        this.showDeleteSuccess();
+      }).catch(error => {
+        this.apiError = error;
+        this.showDeleteError();
+      });
     }
 
   },
@@ -30252,6 +30291,10 @@ var render = function() {
               },
               [_vm._v("Edit Collection")]
             )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "text-error" }, [
+            _vm._v("\n\t\t\t" + _vm._s(_vm.apiError) + "\n\t\t")
           ])
         ])
       : _vm._e()
@@ -30569,7 +30612,7 @@ if (false) {(function () {
     },
 
     deleteBouquet(index) {
-      this.bouquetIds.splice(index);
+      this.bouquetIds.splice(index, 1);
     }
 
   },
@@ -31075,10 +31118,15 @@ var render = function() {
             _c(
               "div",
               { staticClass: "columns" },
-              _vm._l(_vm.bouquetIds, function(id) {
+              _vm._l(_vm.bouquetIds, function(id, index) {
                 return _c("bouquet", {
                   key: id,
-                  attrs: { viewType: "card", bouquetId: id }
+                  attrs: { viewType: "creation", bouquetId: id },
+                  on: {
+                    remove: function($event) {
+                      _vm.deleteBouquet(index)
+                    }
+                  }
                 })
               })
             )
@@ -31182,11 +31230,14 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_EditCollection_vue__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_181ae372_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_EditCollection_vue__ = __webpack_require__(125);
+var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = null
+
 /* template */
-var __vue_template__ = null
+
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -31196,8 +31247,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_EditCollection_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_181ae372_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_EditCollection_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -31205,6 +31256,22 @@ var Component = normalizeComponent(
 )
 Component.options.__file = "client\\components\\Collections\\EditCollection.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-181ae372", Component.options)
+  } else {
+    hotAPI.reload("data-v-181ae372", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
 
 /* harmony default export */ __webpack_exports__["a"] = (Component.exports);
 
@@ -33078,6 +33145,13 @@ const bouquetsFn = (state) => () => {
 /* harmony export (immutable) */ __webpack_exports__["bouquetsFn"] = bouquetsFn;
 
 
+const collectionsFn = (state) => () => {
+	return state.collections;
+}
+/* harmony export (immutable) */ __webpack_exports__["collectionsFn"] = collectionsFn;
+
+
+
 const srp = (state) => (id) => {
 	for(var i = 0; i < state.srps.length; i++) {
 		if(state.srps[i].srp_id == id) {
@@ -33950,6 +34024,490 @@ const miniToastr = {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (miniToastr);
+
+/***/ }),
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Utility_PictureInput__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Utility_InputTag__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Collections__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Bouquets_BouquetPicker__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Bouquets_Bouquet__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  components: {
+    PictureInput: __WEBPACK_IMPORTED_MODULE_0__Utility_PictureInput__["a" /* default */],
+    InputTag: __WEBPACK_IMPORTED_MODULE_1__Utility_InputTag__["a" /* default */],
+    BouquetPicker: __WEBPACK_IMPORTED_MODULE_3__Bouquets_BouquetPicker__["a" /* default */],
+    Bouquet: __WEBPACK_IMPORTED_MODULE_4__Bouquets_Bouquet__["a" /* default */]
+  },
+
+  data() {
+    return {
+      imageFile: null,
+      formHasErrors: false,
+      submitError: '',
+      submitting: false,
+      pickerOpen: false,
+      deletedBouquetIds: [],
+      collection: {
+        bouquetIds: []
+      }
+    };
+  },
+
+  created() {
+    this.updateInitialization();
+
+    if (this.collection == null) {
+      this.$store.watch(this.$store.getters.collectionsFn, _ => {
+        console.log("State updated, vuexCollection: ", this.vuexCollection);
+
+        if (this.collection == null) {
+          this.updateInitialization();
+        }
+      });
+    }
+
+    console.log("this.collection: " + this.collection);
+  },
+
+  computed: {
+    vuexCollection() {
+      return this.$store.getters.collection(this.$route.params.id);
+    }
+
+  },
+  methods: {
+    onPictureChange() {
+      console.log('New picture selected!');
+
+      if (this.$refs.pictureInput.image) {
+        this.imageFile = this.$refs.pictureInput.file;
+        console.log('Picture loaded.');
+      } else {
+        console.log('FileReader API not supported: use the <form>, Luke!');
+      }
+    },
+
+    updateInitialization() {
+      this.collection = this.vuexCollection;
+      console.log('collection: ' + JSON.stringify(this.collection));
+      this.collection.bouquetIds = [];
+
+      for (var i = 0; i < this.collection.collection_items.length; i++) {
+        this.collection.bouquetIds.push(this.collection.collection_items[i].bouquet_id);
+      }
+
+      if (this.collection == null) return;
+    },
+
+    validateBeforeSubmit() {
+      this.$validator.validateAll().then(result => {
+        if (result) {
+          this.submit();
+          return;
+        }
+
+        this.formHasErrors = true;
+      });
+    },
+
+    submit() {
+      this.submitting = true;
+      var collection = {
+        name: this.name,
+        description: this.description,
+        imageFile: this.imageFile,
+        items: this.bouquetIds
+      };
+      __WEBPACK_IMPORTED_MODULE_2__services_Collections__["a" /* default */].addCollection(collection).then(res => {
+        console.log("CollectionService.addCollection request");
+        this.submitting = false;
+        this.showAddSuccess();
+        this.$store.dispatch('updateCollections').then(_ => {
+          console.log("Successfully dispatched updateCollections action");
+          this.$router.push('/collections/' + res);
+        });
+      }).catch(err => {
+        this.showAddFail();
+        this.submitting = false;
+        this.submitError = err;
+      });
+    },
+
+    openPicker() {
+      this.pickerOpen = true;
+    },
+
+    closePicker() {
+      this.pickerOpen = false;
+    },
+
+    addBouquet(id) {
+      console.log("add bouquet called: " + id);
+      this.collection.bouquetIds.push(id);
+      this.closePicker();
+    },
+
+    deleteBouquet(index) {
+      for (var i = 0; i < this.collection.collection_items.length; i++) {
+        if (this.collection.collection_items[i].bouquet_id == bouquetIds[index]) {
+          this.deletedBouquetIds.push(bouquetIds[index]);
+          break;
+        }
+      }
+
+      this.collection.bouquetIds.splice(index, 1);
+    }
+
+  },
+  notifications: {
+    showAddSuccess: {
+      title: 'Success',
+      message: 'Successfully added collection',
+      type: 'success'
+    },
+    showAddFail: {
+      title: 'Error',
+      message: 'Failed to add collection',
+      type: 'error'
+    }
+  }
+});
+
+/***/ }),
+/* 125 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "text-left col-mx-auto column col-6 col-xs-12",
+      staticStyle: { "margin-top": "20px" }
+    },
+    [
+      _c("h3", [_vm._v("Edit Collection")]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.validateBeforeSubmit($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "form-label", attrs: { for: "s_name" } },
+              [_vm._v("Name")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "validate",
+                  rawName: "v-validate",
+                  value: "required",
+                  expression: "'required'"
+                },
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.collection.name,
+                  expression: "collection.name"
+                }
+              ],
+              staticClass: "form-input",
+              class: { input: true, "is-error": _vm.errors.has("name") },
+              attrs: { name: "name", id: "s_name" },
+              domProps: { value: _vm.collection.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.collection, "name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.errors.has("name"),
+                  expression: "errors.has('name')"
+                }
+              ],
+              staticClass: "form-input-hint text-error"
+            },
+            [_vm._v(_vm._s(_vm.errors.first("name")))]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "label",
+              { staticClass: "form-label", attrs: { for: "input-example-3" } },
+              [_vm._v("Description")]
+            ),
+            _vm._v(" "),
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.collection.description,
+                  expression: "collection.description"
+                }
+              ],
+              staticClass: "form-input",
+              attrs: { id: "input-example-3", rows: "3" },
+              domProps: { value: _vm.collection.description },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.collection, "description", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c("label", { staticClass: "form-label" }, [
+                _vm._v("Banner Image")
+              ]),
+              _vm._v(" "),
+              _c("picture-input", {
+                ref: "pictureInput",
+                attrs: {
+                  width: "500",
+                  height: "200",
+                  margin: "16",
+                  removable: true,
+                  accept: "image/jpeg,image/png",
+                  size: "15",
+                  prefill: _vm.vuexCollection.image,
+                  buttonClass: "btn"
+                },
+                on: { change: _vm.onPictureChange }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { staticClass: "form-label" }, [_vm._v("Bouquets")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "columns" },
+              _vm._l(_vm.collection.bouquetIds, function(id, index) {
+                return _c("bouquet", {
+                  key: id,
+                  attrs: { viewType: "creation", bouquetId: id },
+                  on: {
+                    remove: function($event) {
+                      _vm.deleteBouquet(index)
+                    }
+                  }
+                })
+              })
+            )
+          ]),
+          _vm._v(" "),
+          _c("BouquetPicker", {
+            attrs: {
+              modalActive: _vm.pickerOpen,
+              excludedBouquetIds: _vm.collection.bouquetIds
+            },
+            on: {
+              close: function($event) {
+                _vm.closePicker()
+              },
+              bouquetClicked: _vm.addBouquet
+            }
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.openPicker()
+                  }
+                }
+              },
+              [_vm._v("Add bouquet")]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.formHasErrors,
+                  expression: "formHasErrors"
+                }
+              ],
+              staticClass: "form-input-hint text-error"
+            },
+            [_vm._v("Please fix errors before trying to add a collection.")]
+          ),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "p",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.submitError != "",
+                  expression: "submitError != ''"
+                }
+              ],
+              staticClass: "form-input-hint text-error",
+              class: { loading: _vm.submitting }
+            },
+            [_vm._v(_vm._s(_vm.submitError))]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("\n\t\t\t\t\tAdd Collection\n\t\t\t\t")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-181ae372", esExports)
+  }
+}
 
 /***/ })
 /******/ ]);

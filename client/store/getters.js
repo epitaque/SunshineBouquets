@@ -36,6 +36,11 @@ export const bouquetsFn = (state) => () => {
 	return state.bouquets;
 }
 
+export const collectionsFn = (state) => () => {
+	return state.collections;
+}
+
+
 export const srp = (state) => (id) => {
 	for(var i = 0; i < state.srps.length; i++) {
 		if(state.srps[i].srp_id == id) {

@@ -41,6 +41,7 @@ app.post('/api/collections/add', 		 	auth.validate, upload.multer, collections.a
 app.post('/api/collections/addwithimage',	auth.validate, upload.multer, upload.bannerResizer, collections.addCollection);
 app.post('/api/collections/edit', 			auth.validate, upload.multer, collections.editCollection);
 app.post('/api/collections/editwithimage',	auth.validate, upload.multer, upload.bannerResizer, collections.editCollection);
+app.post('/api/collections/delete', 		auth.validate, collections.removeCollection);
 
 
 app.get('/api/profile', auth.validate, (req, res) => { res.json({ user: req.decoded.name, email: req.decoded.email }); });

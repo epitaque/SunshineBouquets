@@ -92,7 +92,17 @@ module.exports.editCollection = function (req, res) {
 }
 
 module.exports.removeCollection = function (req, res) {
+	var collection_id = Number(req.body.id);
+	console.log("deleting collection...");
 
+	deleteCollection(collection_id).then(_ => {
+		console.log('sending 200 status');
+		res.sendStatus(200);
+	}).catch(error => {
+		console.log("Error deleting collection: " + error);
+		res.status(500).json({ error });
+	});
+	//
 }
 
 module.exports.addCollectionItem = function (req, res) {
@@ -103,12 +113,14 @@ module.exports.removeCollectionItem = function (req, res) {
 
 }
 
-function deleteCollectionItem(collectionId) {
-	return new Promise((resolve, reject) => {
-		return db.getCollection(collectionId).then(collection => {
-			if (collection.image) {
-				return utility.deleteImage(collection.image);
-			}
-		}).then(db.deleteCollectionItem(collectionId));
-	})
+function deleteCollection(collectionId) {
+	console.log('deleting collection: ' + collectionId + "type: " + typeof(collectionId));
+	return db.removeCollectionItems(collectionId)
+	.then(_ => db.getCollection(collectionId))
+	.then(collection => { utility.deleteImage(collection.image);})
+	.then(_ => db.removeCollection(collectionId));
+}
+
+function deleteCollectionItem(collectionItemId) {
+	return db.deleteCollectionItem(collectionItemId);
 }

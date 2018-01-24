@@ -60,9 +60,9 @@ module.exports.updateCollection = function (collection) {
 
 module.exports.getCollections = function () {
 	return new Promise((resolve, reject) => {
-		con.query('SELECT * FROM collections', function (err, rows) {
-			if (err) {
-				reject(err);
+		con.query('SELECT * FROM collections', function (error, rows) {
+			if (error) {
+				reject(error);
 			}
 			else {
 				resolve(rows);
@@ -96,16 +96,19 @@ module.exports.getCollections = function () {
 
 module.exports.getCollection = function (collectionId) {
 	return new Promise((resolve, reject) => {
-		con.query('SELECT * FROM collections WHERE collection_id = ', collectionId, function (err, rows) {
-			if (err) {
-				reject(err);
+		console.log('getCollection called with collectionId: ' + collectionId);
+		con.query('SELECT * FROM collections WHERE collection_id = ?', collectionId, function (error, rows) {
+			if (error) {
+				console.log('rejecting getCollection with error: ' + error);
+				reject(error);
 			}
 			else {
+				console.log('resolving getCollection with: ' + JSON.stringify(rows[0]));
 				resolve(rows[0]);
 			}
 		});
 	}).then(collection => {
-		module.exports.getCollectionItems(collection.collection_id).then(items => {
+		return module.exports.getCollectionItems(collection.collection_id).then(items => {
 			collection.collection_items = items;
 			return collection;
 		});
@@ -114,11 +117,15 @@ module.exports.getCollection = function (collectionId) {
 
 module.exports.getCollectionItems = function (collectionId) {
 	return new Promise((resolve, reject) => {
-		con.query('SELECT * FROM collection_items WHERE collection_id = ', collectionId, function (err, rows) {
+		console.log("getting colleciton items " + collectionId);
+		con.query('SELECT * FROM collection_items WHERE collection_id = ?', collectionId, function (error, rows) {
+			console.log("inside adsfadsf");
 			if(error) {
+				console.log("rejecting due to error"  + error);
 				reject(error);
 			}
 			else {
+				console.log("resolving rows: " + rows);
 				resolve(rows);
 			}
 		});
@@ -145,6 +152,19 @@ module.exports.addCollectionItem = function (collectionItem) {
 			}
 		});
 
+	});
+}
+
+module.exports.removeCollectionItems = function (collectionId) {
+	return new Promise((resolve, reject) => {
+		con.query('DELETE FROM collection_items WHERE collection_id = ?', collectionId, function (error, result) {
+			if (error) {
+				reject(error);
+			}
+			else {
+				resolve();
+			}
+		});
 	});
 }
 

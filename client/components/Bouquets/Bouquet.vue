@@ -1,7 +1,7 @@
 <template>
 	<div :class="rootClassString" @click="rootClicked">
 		<!-- Card View Type -->
-		<div v-if="viewType=='card'">
+		<div v-if="viewType=='card' || viewType=='creation'">
 			<div class="card">
 				<div class="card-image">
 					<img :src="bouquet.image" class="img-responsive">
@@ -13,6 +13,9 @@
 				</div>
 				<div class="card-body">
 					<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
+				</div>
+				<div class="card-footer" v-if="viewType=='creation'">
+					<i class="icon icon-cross c-hand" @click="$emit('remove')"></i>
 				</div>
 			</div>
 		</div>
@@ -133,6 +136,9 @@ export default {
 			}
 			if(this.viewType == 'clickable-card') {
 				classStr += ' c-hand'
+			}
+			if(this.viewType == 'creation') {
+				classStr += 'column col-4 col-md-6 col-xs-12 bouquetroot';
 			}
 			if(this.viewType == 'cart') {
 				classStr += 'col-12 bouquetroot';

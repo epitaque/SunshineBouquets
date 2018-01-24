@@ -36,21 +36,26 @@
 				<button type="button" class="btn btn-error" @click="deleteCollection">Delete Collection</button>
 				<button type="button" class="btn btn-primary" @click="$router.push('/collections/edit/' + collectionId);">Edit Collection</button>
 			</div>
+
+			<div class="text-error">
+				{{ apiError }}
+			</div>
 		</div>
-
-
 	</div>
 </template>
 
 <script>
 import Bouquet from '../Bouquets/Bouquet';
+import Collections from '../../services/Collections';
 
 export default {
 	name: 'collection',
 	props: ['collectionId', 'viewType'],
 	components: { Bouquet },
 	data() {
-		return {};
+		return {
+			apiError: ''
+		};
 	},
 	computed: {
 		collection() {
@@ -84,7 +89,14 @@ export default {
 	},
 	methods: {
 		deleteCollection() {
-			this.showDeleteSuccess();
+			Collections.removeCollection(this.collectionId).then(_ => {
+				this.$store.dispatch('updateCollections');
+				this.$router.push('/collections/');
+				this.showDeleteSuccess();
+			}).catch(error => {
+				this.apiError = error;
+				this.showDeleteError();
+			});
 		}
 	},
 	notifications: {

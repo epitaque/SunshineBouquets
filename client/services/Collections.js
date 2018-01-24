@@ -153,10 +153,10 @@ export default {
 				console.log("Got here, response: " + JSON.stringify(res));
 
 				if(res.status == 200) {
-					resolve(collectionId);
+					resolve();
 				}
 				else {
-					reject({"error": res.error});
+					reject(res.error);
 				}
 			}).catch(error => {
 				reject('Failed to remove collection.');

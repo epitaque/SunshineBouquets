@@ -149,7 +149,12 @@ export default {
 			});
 		},
 		deleteSrp(index) {
-			this.deletedSrps.push(this.bouquet.srps[index].srp_id);
+			for(var i = 0; i < this.vuexBouquet.srps.length; i++) {
+				if(this.vuexBouquet.srps[i].srp_id == this.bouquet.srps[index].srp_id) {
+					this.deletedSrps.push(this.bouquet.srps[index].srp_id);
+					console.log('adding deleted srp: ' + this.bouquet.srps[index].srp_id);
+				}
+			}
 			this.bouquet.srps.splice(index, 1);
 		},
 		updateInitialization() {
@@ -172,9 +177,6 @@ export default {
 					this.updateInitialization();
 				}
 			});
-		}
-		else {
-
 		}
 		console.log("this.bouquet: " + this.bouquet);
 	},

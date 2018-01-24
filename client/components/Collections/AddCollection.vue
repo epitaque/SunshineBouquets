@@ -29,7 +29,7 @@
 			<div class="form-group">
 				<label class="form-label">Bouquets</label>
 				<div class="columns">
-					<bouquet :key="id" viewType="card" v-for="id in bouquetIds" :bouquetId="id">
+					<bouquet :key="id" viewType="creation" v-for="(id, index) in bouquetIds" :bouquetId="id" @remove="deleteBouquet(index)">
 
 					</bouquet>
 				</div>
@@ -144,7 +144,7 @@ export default {
 			this.closePicker();
 		},
 		deleteBouquet(index) {
-			this.bouquetIds.splice(index);
+			this.bouquetIds.splice(index, 1);
 		},
 	},
 	notifications: {
