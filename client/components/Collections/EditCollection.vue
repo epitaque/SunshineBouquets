@@ -15,7 +15,8 @@
 				<label class="form-label">Banner Image</label>
 				<picture-input 
 					ref="pictureInput" 
-					@change="onPictureChange" 
+					@change="onPictureChange"
+					@remove="onPictureRemoved"
 					width="500" 
 					height="200" 
 					margin="16"
@@ -48,7 +49,7 @@
 
 			<div class="form-group">
 				<button type="submit" class="btn btn-primary">
-					Add Collection
+					Submit Edit
 				</button>
 			</div>
 
@@ -63,6 +64,7 @@ import InputTag from '../Utility/InputTag'
 import CollectionService from '../../services/Collections';
 import BouquetPicker from '../Bouquets/BouquetPicker';
 import Bouquet from '../Bouquets/Bouquet';
+import Vue from 'vue';
 
 export default {
 	components: {
@@ -73,14 +75,14 @@ export default {
 	},
 	data() {
 		return {
-			imageFile: null,
 			formHasErrors: false,
 			submitError: '',
 			submitting: false,
 			pickerOpen: false,
 
+			addedBouquetIds: [],
 			deletedBouquetIds: [],
-			collection: { bouquetIds: [] }
+			collection: { bouquetIds: [], pictureRemoved: false, pictureChanged: false }
 		};
 	},
 	created() {
@@ -104,16 +106,23 @@ export default {
 		onPictureChange() {
 			console.log('New picture selected!')
 			if (this.$refs.pictureInput.image) {
-				this.imageFile = this.$refs.pictureInput.file;
+				this.collection.imageFile = this.$refs.pictureInput.file;
+				this.collection.pictureRemoved = false;
+				this.collection.pictureChanged = true;
 				console.log('Picture loaded.')
 			} else {
 				console.log('FileReader API not supported: use the <form>, Luke!')
 			}
 		},
+		onPictureRemoved() {
+			this.collection.pictureRemoved = true;
+			this.collection.pictureChanged = false;
+		},
 		updateInitialization() {
 			this.collection = this.vuexCollection;
 			console.log('collection: ' + JSON.stringify(this.collection));
-			this.collection.bouquetIds = [];
+			Vue.set(this.collection, 'bouquetIds', []);
+			//this.collection.bouquetIds = [];
 			for(var i = 0; i < this.collection.collection_items.length; i++) {
 				this.collection.bouquetIds.push(this.collection.collection_items[i].bouquet_id);
 			}
@@ -131,23 +140,16 @@ export default {
 		submit() {
 			this.submitting = true;
 
-			var collection = {
-				name: this.name,
-				description: this.description,
-				imageFile: this.imageFile,
-				items: this.bouquetIds
-			}
-
-			CollectionService.addCollection(collection).then(res => {
+			CollectionService.editCollection(this.collection, this.deletedBouquetIds, this.addedBouquetIds).then(res => {
 				console.log("CollectionService.addCollection request");
 				this.submitting = false;
-				this.showAddSuccess();
+				this.showEditSuccess();
 				this.$store.dispatch('updateCollections').then(_ => {
 					console.log("Successfully dispatched updateCollections action");
 					this.$router.push('/collections/' + res);
 				});
 			}).catch(err => {
-				this.showAddFail();
+				this.showEditFail();
 				this.submitting = false;
 				this.submitError = err;
 			});
@@ -161,27 +163,33 @@ export default {
 		addBouquet(id) {
 			console.log("add bouquet called: " + id);
 			this.collection.bouquetIds.push(id);
+			this.addedBouquetIds.push(id);
 			this.closePicker();
 		},
 		deleteBouquet(index) {
+			var id = this.collection.bouquetIds[index];
 			for(var i = 0; i < this.collection.collection_items.length; i++) {
-				if(this.collection.collection_items[i].bouquet_id == bouquetIds[index]) {
-					this.deletedBouquetIds.push(bouquetIds[index]);
+				if(this.collection.collection_items[i].bouquet_id == id) {
+					this.deletedBouquetIds.push(id);
 					break;
 				}
+			}
+			var aIndex = this.addedBouquetIds.indexOf(id);
+			if(aIndex != -1) {
+				this.addedBouquetIds.splice(aIndex, 1);
 			}
 			this.collection.bouquetIds.splice(index, 1);
 		},
 	},
 	notifications: {
-		showAddSuccess: {
+		showEditSuccess: {
 			title: 'Success',
-			message: 'Successfully added collection',
+			message: 'Successfully edited collection',
 			type: 'success'
 		},
-		showAddFail: {
+		showEditFail: {
 			title: 'Error',
-			message: 'Failed to add collection',
+			message: 'Failed to edit collection',
 			type: 'error'
 		}
 	}

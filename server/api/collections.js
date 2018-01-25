@@ -50,45 +50,58 @@ module.exports.addCollection = function (req, res) {
 module.exports.editCollection = function (req, res) {
 	var collectionId = req.body.collection_id;
 	var promises = [];
-
-	for (var i = 0; i < req.body.newCollectionItems.length; i++) {
-		var reqItem = JSON.parse(req.body.newCollectionItems[i]);
-		var item = {
-			bouquet_id: reqItem.bouquet_id,
-			collection_id: req.body.collectionId
+	try {
+		var deletedBouquetIds = JSON.parse(req.body.deletedBouquetIds);
+		for(var i = 0; i < deletedBouquetIds.length; i++) {
+			var reqItem = deletedBouquetIds[i];
+			console.log("reqItem: " + reqItem);
+			promises.push(db.removeCollectionItemByIds(collectionId, reqItem));
 		}
-		promises.push(db.addCollectionItem(item));
+	} catch(error) {
+		console.log("Error editing collection: " + error);
+		res.status(500).json({ error });
+		return;
 	}
 
-	var collection = {
-		name: req.body.name,
-		description: req.body.description,
-		collection_d: collectionId
-	}
-	if (req.body.pictureRemoved == 'true' || req.body.pictureChanged == 'true') {
-		collection.image = req.body.imageIndex == -1 ? '' : req.files[req.body.imageIndex].path;
-		promises.push(db.getCollection(collectionId).then(dbCollection => {
-			return utility.deleteImage(dbCollection.image);
-		}).then(_ => {
-			return db.updateCollection(collection);
-		}));
-	}
-	else {
-		promises.push(db.updateCollection(collection));
-	}
+	Promise.all(promises).then(_ => {
+		var newPromises = [];
 
-	var deletedCollectionItems = JSON.parse(req.body.deletedCollectionItems);
-	for (var i = 0; i < deletedCollectionItems.length; i++) {
-		var deletedCollectionItemId = Number(deletedCollectionItems[i]);
-		promises.push(deleteCollectionItem(collectionId));
-	}
-
-	Promise.all(promises).then(values => {
+		var addedBouquetIds = JSON.parse(req.body.addedBouquetIds);
+		for (var i = 0; i < addedBouquetIds.length; i++) {
+			var reqItem = addedBouquetIds[i];
+			var item = {
+				bouquet_id: reqItem,
+				collection_id: collectionId
+			}
+			newPromises.push(db.addCollectionItem(item));
+		}
+	
+	
+		var collection = {
+			name: req.body.name,
+			description: req.body.description,
+			collection_id: collectionId
+		}
+		if (req.body.pictureRemoved == 'true' || req.body.pictureChanged == 'true') {
+			collection.image = req.body.imageIndex == -1 ? '' : req.files[req.body.imageIndex].path;
+			newPromises.push(db.getCollection(collectionId).then(dbCollection => {
+				return utility.deleteImage(dbCollection.image);
+			}).then(_ => {
+				return db.updateCollection(collection);
+			}));
+		}
+		else {
+			promises.push(db.updateCollection(collection));
+		}
+		
+		return Promise.all(newPromises);
+	}).then(values => {
+		console.log("Sending 200 status");
 		res.status(200).json({ id: collectionId });
 	}).catch(error => {
+		console.log("Sending 500 status");
 		res.status(500).json({ error });
-	});
-
+	});	
 }
 
 module.exports.removeCollection = function (req, res) {
@@ -103,14 +116,6 @@ module.exports.removeCollection = function (req, res) {
 		res.status(500).json({ error });
 	});
 	//
-}
-
-module.exports.addCollectionItem = function (req, res) {
-
-}
-
-module.exports.removeCollectionItem = function (req, res) {
-
 }
 
 function deleteCollection(collectionId) {

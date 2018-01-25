@@ -15,10 +15,10 @@
 			</div>
 		</div>
 
-		<p class="text-large text-gray" v-if="user != null && srpIds.length == 0"> 
+		<p class="text-large text-gray text-center" v-if="user != null && srpIds.length == 0"> 
 			Your cart is empty. Try adding some <router-link to="/bouquets">bouquets</router-link>.
 		</p>
-		<p class="text-large text-gray" v-if="user == null">
+		<p class="text-large text-gray text-center" v-if="user == null">
 			Looks like you're not logged in, please <router-link to="/login">Login</router-link> to add items to your cart.
 		</p>
 	</div>

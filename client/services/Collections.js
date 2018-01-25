@@ -47,7 +47,7 @@ export default {
 			
 		});
 	},
-	editCollection(collection, deletedSrps) {
+	editCollection(collection, deletedBouquetIds, addedBouquetIds) {
 		return new Promise((resolve, reject) => {
 			console.log("Editing collection: " + JSON.stringify(collection));
 
@@ -65,55 +65,19 @@ export default {
 			}
 
 			formData.append('name', collection.name);
-			formData.append('collections', collection.collections.join());
-			formData.append('pack_size', collection.pack_size);
-			formData.append('tags', collection.tags.join());
+			formData.append('description', collection.description);
 			formData.append('collection_id', collection.collection_id);
 			formData.append('pictureRemoved', collection.pictureRemoved);
 			formData.append('pictureChanged', collection.pictureChanged);
-			formData.append('deletedSrps', JSON.stringify(deletedSrps));
-
-			for(var i = 0; i < collection.items.length; i++) {
-				var bouSrp = collection.items[i];
-
-				console.log("bouSrp[ " + i + "]: " + JSON.stringify(bouSrp));
-
-				var itemData = {
-					item: bouSrp.item,
-					name: bouSrp.name,
-					stems: bouSrp.stems,
-					pictureChanged: bouSrp.pictureChanged ? true : false,
-					pictureRemoved: bouSrp.pictureRemoved ? true : false,
-					imageIndex: -1
-				};
-
-				if(!bouSrp.pictureRemoved && bouSrp.pictureChanged && bouSrp.imageFile) {
-					formData.append('images[]', bouSrp.imageFile);
-					containsImages = true;
-					itemData.imageIndex = imageIndex++;
-				} 
-
-				if(!bouSrp.item_id) {
-					itemData.new = true;
-				}
-				else {
-					itemData.item_id = bouSrp.item_id;
-				}
-
-				var stringified = JSON.stringify(itemData);
-				console.log('stringified item: ' + stringified);
-
-				formData.append('items[]', stringified);
-			}
+			formData.append('deletedBouquetIds', JSON.stringify(deletedBouquetIds));
+			formData.append('addedBouquetIds', JSON.stringify(addedBouquetIds));
 
 			if(containsImages) {
 				apiUrl += 'withimage';
 	-			formData.append('image', collection.image);
 			}
 
-			console.log("pictureRemoved status: " + collection.pictureRemoved);
 			console.log("apiUrl: " + apiUrl);
-			
 			
 			Vue.http.post(apiUrl, formData, 
 				{ headers: { 'Content-Type': 'multipart/form-data' }

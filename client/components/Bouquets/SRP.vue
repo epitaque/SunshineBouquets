@@ -1,6 +1,6 @@
 <template>
 	<div @click="clicked" :class="getRootClass">
-		<div v-if="viewType == 'bouquetPage'">
+		<div v-if="viewType == 'bouquetPage' && !invalid">
 			<div class="card" :class="this.selected ? 'selected' : ''">
 				<div class="card-image">
 					<img :src="srp.image" class="img-responsive" height="100%" width="100%">
@@ -22,7 +22,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="viewType == 'cart'">
+		<div v-if="viewType == 'cart' && !invalid">
 		<!--- Cart View Type -->
 			<div class="columns">
 				<div>
@@ -62,7 +62,15 @@ export default  {
 	name: 'srp',
 	props: ['id', 'viewType', 'selected'],
 	data() {
-		return {}
+		return {
+			invalid: false,
+		}
+	},
+	created() {
+		if(!this.srp) {
+			this.invalid = true;
+			this.$store.commit('removeSrpIdFromCart', this.id);
+		}
 	},
 	computed: {
 		srp() {

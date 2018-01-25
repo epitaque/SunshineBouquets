@@ -88,8 +88,8 @@
 					</div>
 
 					<div v-if="isLoggedIn">
-						<button @click="remove" class="btn btn-error">Delete</button> 
-						<button @click="edit" class="btn">Edit</button>
+						<button type="button" @click="remove" class="btn btn-error">Delete</button> 
+						<button type="button" @click="edit" class="btn">Edit</button>
 					</div>
 				</div>
 				<div class="text-error">

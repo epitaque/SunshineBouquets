@@ -43,8 +43,8 @@ module.exports.updateCollection = function (collection) {
 			description: collection.description,
 		};
 
-		if (collection.banner_image != null) {
-			collectionData.banner_image = collection.banner_image;
+		if (collection.image != null) {
+			collectionData.image = collection.image;
 		}
 		con.query('UPDATE collections SET ? WHERE collection_id = ?', [collectionData, collection.collection_id], function (error, result) {
 			if (error) {
@@ -158,6 +158,19 @@ module.exports.addCollectionItem = function (collectionItem) {
 module.exports.removeCollectionItems = function (collectionId) {
 	return new Promise((resolve, reject) => {
 		con.query('DELETE FROM collection_items WHERE collection_id = ?', collectionId, function (error, result) {
+			if (error) {
+				reject(error);
+			}
+			else {
+				resolve();
+			}
+		});
+	});
+}
+
+module.exports.removeCollectionItemByIds = function(collectionId, bouquetId) {
+	return new Promise((resolve, reject) => {
+		con.query('DELETE FROM collection_items WHERE collection_id = ? AND bouquet_id = ?', [collectionId, bouquetId], function (error, result) {
 			if (error) {
 				reject(error);
 			}

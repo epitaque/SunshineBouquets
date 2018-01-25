@@ -20048,7 +20048,7 @@ if (false) {(function () {
 			
 		});
 	},
-	editCollection(collection, deletedSrps) {
+	editCollection(collection, deletedBouquetIds, addedBouquetIds) {
 		return new Promise((resolve, reject) => {
 			console.log("Editing collection: " + JSON.stringify(collection));
 
@@ -20066,55 +20066,19 @@ if (false) {(function () {
 			}
 
 			formData.append('name', collection.name);
-			formData.append('collections', collection.collections.join());
-			formData.append('pack_size', collection.pack_size);
-			formData.append('tags', collection.tags.join());
+			formData.append('description', collection.description);
 			formData.append('collection_id', collection.collection_id);
 			formData.append('pictureRemoved', collection.pictureRemoved);
 			formData.append('pictureChanged', collection.pictureChanged);
-			formData.append('deletedSrps', JSON.stringify(deletedSrps));
-
-			for(var i = 0; i < collection.items.length; i++) {
-				var bouSrp = collection.items[i];
-
-				console.log("bouSrp[ " + i + "]: " + JSON.stringify(bouSrp));
-
-				var itemData = {
-					item: bouSrp.item,
-					name: bouSrp.name,
-					stems: bouSrp.stems,
-					pictureChanged: bouSrp.pictureChanged ? true : false,
-					pictureRemoved: bouSrp.pictureRemoved ? true : false,
-					imageIndex: -1
-				};
-
-				if(!bouSrp.pictureRemoved && bouSrp.pictureChanged && bouSrp.imageFile) {
-					formData.append('images[]', bouSrp.imageFile);
-					containsImages = true;
-					itemData.imageIndex = imageIndex++;
-				} 
-
-				if(!bouSrp.item_id) {
-					itemData.new = true;
-				}
-				else {
-					itemData.item_id = bouSrp.item_id;
-				}
-
-				var stringified = JSON.stringify(itemData);
-				console.log('stringified item: ' + stringified);
-
-				formData.append('items[]', stringified);
-			}
+			formData.append('deletedBouquetIds', JSON.stringify(deletedBouquetIds));
+			formData.append('addedBouquetIds', JSON.stringify(addedBouquetIds));
 
 			if(containsImages) {
 				apiUrl += 'withimage';
 	-			formData.append('image', collection.image);
 			}
 
-			console.log("pictureRemoved status: " + collection.pictureRemoved);
 			console.log("apiUrl: " + apiUrl);
-			
 			
 			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post(apiUrl, formData, 
 				{ headers: { 'Content-Type': 'multipart/form-data' }
@@ -24970,7 +24934,16 @@ if (false) {(function () {
   props: ['id', 'viewType', 'selected'],
 
   data() {
-    return {};
+    return {
+      invalid: false
+    };
+  },
+
+  created() {
+    if (!this.srp) {
+      this.invalid = true;
+      this.$store.commit('removeSrpIdFromCart', this.id);
+    }
   },
 
   computed: {
@@ -25040,7 +25013,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { class: _vm.getRootClass, on: { click: _vm.clicked } }, [
-    _vm.viewType == "bouquetPage"
+    _vm.viewType == "bouquetPage" && !_vm.invalid
       ? _c("div", [
           _c(
             "div",
@@ -25083,7 +25056,7 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    _vm.viewType == "cart"
+    _vm.viewType == "cart" && !_vm.invalid
       ? _c("div", [
           _c("div", { staticClass: "columns" }, [
             _c("div", [
@@ -25232,7 +25205,7 @@ var render = function() {
       _vm.user != null && _vm.srpIds.length == 0
         ? _c(
             "p",
-            { staticClass: "text-large text-gray" },
+            { staticClass: "text-large text-gray text-center" },
             [
               _vm._v(" \n\t\tYour cart is empty. Try adding some "),
               _c("router-link", { attrs: { to: "/bouquets" } }, [
@@ -25247,7 +25220,7 @@ var render = function() {
       _vm.user == null
         ? _c(
             "p",
-            { staticClass: "text-large text-gray" },
+            { staticClass: "text-large text-gray text-center" },
             [
               _vm._v("\n\t\tLooks like you're not logged in, please "),
               _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")]),
@@ -25976,6 +25949,7 @@ var render = function() {
                             "button",
                             {
                               staticClass: "btn btn-error",
+                              attrs: { type: "button" },
                               on: { click: _vm.remove }
                             },
                             [_vm._v("Delete")]
@@ -25983,7 +25957,11 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "button",
-                            { staticClass: "btn", on: { click: _vm.edit } },
+                            {
+                              staticClass: "btn",
+                              attrs: { type: "button" },
+                              on: { click: _vm.edit }
+                            },
                             [_vm._v("Edit")]
                           )
                         ])
@@ -34052,6 +34030,8 @@ const miniToastr = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_Collections__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Bouquets_BouquetPicker__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Bouquets_Bouquet__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_vue__);
 //
 //
 //
@@ -34111,6 +34091,8 @@ const miniToastr = {
 //
 //
 //
+//
+
 
 
 
@@ -34126,14 +34108,16 @@ const miniToastr = {
 
   data() {
     return {
-      imageFile: null,
       formHasErrors: false,
       submitError: '',
       submitting: false,
       pickerOpen: false,
+      addedBouquetIds: [],
       deletedBouquetIds: [],
       collection: {
-        bouquetIds: []
+        bouquetIds: [],
+        pictureRemoved: false,
+        pictureChanged: false
       }
     };
   },
@@ -34165,17 +34149,24 @@ const miniToastr = {
       console.log('New picture selected!');
 
       if (this.$refs.pictureInput.image) {
-        this.imageFile = this.$refs.pictureInput.file;
+        this.collection.imageFile = this.$refs.pictureInput.file;
+        this.collection.pictureRemoved = false;
+        this.collection.pictureChanged = true;
         console.log('Picture loaded.');
       } else {
         console.log('FileReader API not supported: use the <form>, Luke!');
       }
     },
 
+    onPictureRemoved() {
+      this.collection.pictureRemoved = true;
+      this.collection.pictureChanged = false;
+    },
+
     updateInitialization() {
       this.collection = this.vuexCollection;
       console.log('collection: ' + JSON.stringify(this.collection));
-      this.collection.bouquetIds = [];
+      __WEBPACK_IMPORTED_MODULE_5_vue___default.a.set(this.collection, 'bouquetIds', []); //this.collection.bouquetIds = [];
 
       for (var i = 0; i < this.collection.collection_items.length; i++) {
         this.collection.bouquetIds.push(this.collection.collection_items[i].bouquet_id);
@@ -34197,22 +34188,16 @@ const miniToastr = {
 
     submit() {
       this.submitting = true;
-      var collection = {
-        name: this.name,
-        description: this.description,
-        imageFile: this.imageFile,
-        items: this.bouquetIds
-      };
-      __WEBPACK_IMPORTED_MODULE_2__services_Collections__["a" /* default */].addCollection(collection).then(res => {
+      __WEBPACK_IMPORTED_MODULE_2__services_Collections__["a" /* default */].editCollection(this.collection, this.deletedBouquetIds, this.addedBouquetIds).then(res => {
         console.log("CollectionService.addCollection request");
         this.submitting = false;
-        this.showAddSuccess();
+        this.showEditSuccess();
         this.$store.dispatch('updateCollections').then(_ => {
           console.log("Successfully dispatched updateCollections action");
           this.$router.push('/collections/' + res);
         });
       }).catch(err => {
-        this.showAddFail();
+        this.showEditFail();
         this.submitting = false;
         this.submitError = err;
       });
@@ -34229,15 +34214,24 @@ const miniToastr = {
     addBouquet(id) {
       console.log("add bouquet called: " + id);
       this.collection.bouquetIds.push(id);
+      this.addedBouquetIds.push(id);
       this.closePicker();
     },
 
     deleteBouquet(index) {
+      var id = this.collection.bouquetIds[index];
+
       for (var i = 0; i < this.collection.collection_items.length; i++) {
-        if (this.collection.collection_items[i].bouquet_id == bouquetIds[index]) {
-          this.deletedBouquetIds.push(bouquetIds[index]);
+        if (this.collection.collection_items[i].bouquet_id == id) {
+          this.deletedBouquetIds.push(id);
           break;
         }
+      }
+
+      var aIndex = this.addedBouquetIds.indexOf(id);
+
+      if (aIndex != -1) {
+        this.addedBouquetIds.splice(aIndex, 1);
       }
 
       this.collection.bouquetIds.splice(index, 1);
@@ -34245,14 +34239,14 @@ const miniToastr = {
 
   },
   notifications: {
-    showAddSuccess: {
+    showEditSuccess: {
       title: 'Success',
-      message: 'Successfully added collection',
+      message: 'Successfully edited collection',
       type: 'success'
     },
-    showAddFail: {
+    showEditFail: {
       title: 'Error',
-      message: 'Failed to add collection',
+      message: 'Failed to edit collection',
       type: 'error'
     }
   }
@@ -34390,7 +34384,10 @@ var render = function() {
                   prefill: _vm.vuexCollection.image,
                   buttonClass: "btn"
                 },
-                on: { change: _vm.onPictureChange }
+                on: {
+                  change: _vm.onPictureChange,
+                  remove: _vm.onPictureRemoved
+                }
               })
             ],
             1
@@ -34494,7 +34491,7 @@ var staticRenderFns = [
       _c(
         "button",
         { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-        [_vm._v("\n\t\t\t\t\tAdd Collection\n\t\t\t\t")]
+        [_vm._v("\n\t\t\t\t\tSubmit Edit\n\t\t\t\t")]
       )
     ])
   }
