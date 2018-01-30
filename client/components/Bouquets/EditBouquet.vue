@@ -30,15 +30,25 @@
 						<input v-model="bouquet.pack_size" :class="{'input': true, 'is-error': errors.has('pack size') }" type="number" step="1" min="1" class="form-input" name="pack size" id="s_packsize" />
 						<p v-show="errors.has('pack size')" class="form-input-hint text-error">{{ errors.first('pack size') }}</p>
 					</div>
+					<div class="column col-sm-12 col-6">
+						<label class="form-label">Divisions</label>
+						<div class="dropdown">
+							<a class="btn btn-link dropdown-toggle" tabindex="0">Select <i class="icon icon-caret"></i></a>
+							<ul class="menu">
+								<li class="menu-item" v-for="division in divisions" :key="division.division_id">
+									<label class="form-checkbox">
+									<input type="checkbox" :value="division.division_id" v-model="bouquet.divisions">
+										<i class="form-icon"></i> {{division.name}}
+									</label>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="form-label" for="s_collections">Collections</label>
-				<input-tag :tags="bouquet.collectionsArray" :autocompletes="uniqueCollections"></input-tag>
-			</div>
-			<div class="form-group">
-				<label class="form-label" for="s_collections">Tags</label>
-				<input-tag :tags="bouquet.tagsArray" :autocompletes="uniqueTags"></input-tag>
+				<label class="form-label" for="s_tags">Tags</label>
+				<input-tag :tags="bouquet.tags" id="s_tags" :autocompletes="uniqueTags"></input-tag>
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="input-example-3">Description</label>
@@ -76,6 +86,7 @@ import PictureInput from '../Utility/PictureInput';
 import InputTag from '../Utility/InputTag'
 import BouquetService from '../../services/Bouquets';
 import EditableSRP from './EditableSRP';
+import Vue from 'vue';
 
 export default {
 	components: {
@@ -85,7 +96,7 @@ export default {
 	},
 	data() {
 		return {
-			bouquet: { srps: [] },
+			bouquet: { srps: [], divisions: [] },
 			deletedSrps: [],
 
 			formHasErrors: false,
@@ -184,13 +195,13 @@ export default {
 		uniqueTags() {
 			return this.$store.state.uniqueTags;
 		},
-		uniqueCollections() {
-			return this.$store.state.uniqueCollections;
-		},
 		vuexBouquet() {
 			console.log("Params id: " + this.$route.params.id);
 			return this.$store.getters.bouquet(this.$route.params.id);
 		},
+		divisions() {
+			return this.$store.getters.divisions;
+		}
 	},
 	notifications: {
 		showEditSuccess: {

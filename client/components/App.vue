@@ -19,6 +19,9 @@ export default {
 	created() {
 		this.$store.dispatch('updateBouquets');
 		this.$store.dispatch('updateCollections');
+		if(this.$store.getters.isLoggedIn) { // must be changed to determine login status on load
+			this.$store.dispatch('updateDivisions');
+		}
 	}
 };
 </script>

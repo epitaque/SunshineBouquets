@@ -14,6 +14,7 @@ export default {
 			formData.append('name', bouquet.name);
 			formData.append('description', bouquet.description);	
 			formData.append('pack_size', bouquet.packSize);
+			formData.append('divisions', JSON.stringify(bouquet.divisions));
 			if(bouquet.image) { 
 				formData.append('images[]', bouquet.image); 
 				formData.append('imageIndex', imageIndex++);
@@ -76,7 +77,8 @@ export default {
 			} else {
 				formData.append('imageIndex', -1);
 			}
-
+			
+			formData.append('divisions', JSON.stringify(bouquet.divisions));
 			formData.append('name', bouquet.name);
 			formData.append('collections', bouquet.collections.join());
 			formData.append('pack_size', bouquet.pack_size);

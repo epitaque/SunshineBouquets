@@ -28,15 +28,25 @@
 						<input v-validate="'required'" v-model="packSize" :class="{'input': true, 'is-error': errors.has('pack size') }" type="number" step="1" min="1" class="form-input" name="pack size" id="s_packsize" />
 						<p v-show="errors.has('pack size')" class="form-input-hint text-error">{{ errors.first('pack size') }}</p>
 					</div>
+					<div class="column col-sm-12 col-6">
+						<label class="form-label">Divisions</label>
+						<div class="dropdown">
+							<a class="btn btn-link dropdown-toggle" tabindex="0">Select <i class="icon icon-caret"></i></a>
+							<ul class="menu">
+								<li class="menu-item" v-for="division in stDivisions" :key="division.division_id">
+									<label class="form-checkbox">
+									<input type="checkbox" :value="division.division_id" v-model="divisions">
+										<i class="form-icon"></i> {{division.name}}
+									</label>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="form-label" for="s_collections">Collections</label>
-				<input-tag :tags="collectionsArray" :autocompletes="uniqueCollections"></input-tag>
-			</div>
-			<div class="form-group">
-				<label class="form-label" for="s_collections">Tags</label>
-				<input-tag :tags="tagsArray" :autocompletes="uniqueTags"></input-tag>
+				<label class="form-label" for="s_tags">Tags</label>
+				<input-tag :tags="tagsArray" id="s_tags" :autocompletes="uniqueTags"></input-tag>
 			</div>
 			<div class="form-group">
 				<label class="form-label" for="input-example-3">Description</label>
@@ -90,7 +100,8 @@ export default {
 			submitError: '',
 			submitting: false,
 			srps: [],
-			description: ''
+			description: '',
+			divisions: []
 		};
 	},
 	created() {
@@ -126,6 +137,7 @@ export default {
 				packSize: this.packSize,
 				collections: this.collectionsArray,
 				description: this.description,
+				divisions: this.divisions,
 				tags: this.tagsArray,
 				srps: this.srps
 			};
@@ -161,6 +173,9 @@ export default {
 		},
 		uniqueCollections() {
 			return this.$store.state.uniqueCollections;
+		},
+		stDivisions() {
+			return this.$store.getters.divisions;
 		}
 	},
 	notifications: {

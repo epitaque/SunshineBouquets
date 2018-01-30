@@ -14,6 +14,7 @@ CREATE TABLE bouquets (
 	description varchar(500),
 	pack_size int(11),
 	image varchar(50),
+	divisions varchar(500),
 	collections varchar(500),
 	tags varchar(500),
 	date_added datetime NOT NULL,
@@ -52,4 +53,22 @@ CREATE TABLE collection_items (
 	PRIMARY KEY(collection_item_id),
 	FOREIGN KEY(bouquet_id) REFERENCES bouquets(bouquet_id),
 	FOREIGN KEY(collection_id) REFERENCES collections(collection_id)
+);
+
+CREATE TABLE divisions (
+	division_id int(11) NOT NULL AUTO_INCREMENT,
+	name varchar(50) NOT NULL,
+	date_added datetime NOT NULL,
+
+	PRIMARY KEY(division_id)
+);
+
+CREATE TABLE division_items (
+	division_item_id int(11) NOT NULL AUTO_INCREMENT,
+	division_id int(11) NOT NULL,
+	email varchar(100) NOT NULL,
+	date_added datetime NOT NULL,
+
+	PRIMARY KEY(division_item_id),
+	FOREIGN KEY(division_id) REFERENCES divisions(division_id)
 );

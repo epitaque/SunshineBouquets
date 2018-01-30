@@ -99,7 +99,7 @@ module.exports.editCollection = function (req, res) {
 		console.log("Sending 200 status");
 		res.status(200).json({ id: collectionId });
 	}).catch(error => {
-		console.log("Sending 500 status");
+		console.log("Sending 500 status: " + JSON.stringify(error));
 		res.status(500).json({ error });
 	});	
 }

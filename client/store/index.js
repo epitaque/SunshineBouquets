@@ -19,6 +19,7 @@ export default new Vuex.Store({
 			note: ""
 		},
 		collections: [],
+		divisions: [],
 		uniqueCollections: [], 
 		uniqueTags: [],
 	},

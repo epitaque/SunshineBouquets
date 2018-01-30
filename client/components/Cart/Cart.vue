@@ -11,9 +11,11 @@
 			</div>
 
 			<div class="form-group">
-				<button class="btn btn-primary"><i class="icon icon icon-mail"></i> Send Order Email</button>
+				<button type="button" class="btn btn-primary" @click="sendOrderEmail"><i class="icon icon icon-mail"></i> Send Order Email</button>
 			</div>
 		</div>
+		<p class="text-error">{{ submitError }} </p>
+		<div v-if="submitting" class="loading loading-lg"></div>
 
 		<p class="text-large text-gray text-center" v-if="user != null && srpIds.length == 0"> 
 			Your cart is empty. Try adding some <router-link to="/bouquets">bouquets</router-link>.
@@ -26,13 +28,14 @@
 
 <script>
 import SRP from '../Bouquets/SRP';
-
+import CartService from '../../services/Cart';
 
 export default {
 	components: { SRP },
 	data() {
 		return {
-
+			submitting: false,
+			submitError: ''
 		};
 	},
 	computed: {
@@ -57,10 +60,41 @@ export default {
 	methods: {
 		updateNote(e) {
 			this.$store.commit('updateCartNote', e.target.value)
+		},
+		sendOrderEmail() {
+			this.submitting = true;
+
+			var order = {
+				srpIds: this.srpIds,
+				note: this.note,
+				email: this.user.email
+			}
+
+			CartService.sendOrder({order}).then(_ => {
+				this.submitting = false;
+				this.showSendSuccess();
+			}).catch(error => {
+				console.log("Error sending order email...");
+				this.submitting = false;
+				this.submitError = error;
+				this.showSendFail();
+			})
 		}
 	},
 	created() {
 		console.log("Cart component loaded");
+	},
+	notifications: {
+		showSendSuccess: {
+			title: 'Success',
+			message: 'Successfully sent order email',
+			type: 'success'
+		},
+		showSendFail: {
+			title: 'Error',
+			message: 'Failed to deliver order email',
+			type: 'error'
+		},
 	}
 };
 </script>

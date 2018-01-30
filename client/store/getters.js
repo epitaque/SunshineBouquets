@@ -32,6 +32,19 @@ export const collections = (state) => {
 	return state.collections;
 }
 
+export const division = (state) => (id) => {
+	for(var i = 0; i < state.divisions.length; i++) {
+		if(state.divisions[i].division_id == id) {
+			return state.divisions[i];
+		}
+	}
+	return null;
+}
+
+export const divisions = (state) => {
+	return state.divisions;
+}
+
 export const bouquetsFn = (state) => () => {
 	return state.bouquets;
 }
@@ -40,6 +53,9 @@ export const collectionsFn = (state) => () => {
 	return state.collections;
 }
 
+export const divisionsFn = (state) => () => {
+	return state.divisions;
+}
 
 export const srp = (state) => (id) => {
 	for(var i = 0; i < state.srps.length; i++) {

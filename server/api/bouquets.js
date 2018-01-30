@@ -20,6 +20,7 @@ module.exports.addBouquet = function (req, res) {
 		pack_size: req.body.pack_size,
 		image: req.body.imageIndex == -1 ? '' : req.files[req.body.imageIndex].path,
 		collections: req.body.collections,
+		divisions: req.body.divisions,
 		tags: req.body.tags,
 		srps
 	};
@@ -47,6 +48,7 @@ module.exports.editBouquet = function (req, res) {
 		collections: req.body.collections,
 		pack_size: req.body.pack_size,
 		tags: req.body.tags,
+		divisions: req.body.divisions,
 		bouquet_id: req.body.bouquet_id
 	};
 

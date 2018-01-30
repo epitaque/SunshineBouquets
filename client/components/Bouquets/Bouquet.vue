@@ -51,20 +51,26 @@
 					<div class="divider"></div>
 
 					<div class="columns">
-						<div class="column col-4" v-if="bouquet.tags.length != 0">
+						<div class="column col-6" v-if="bouquet.tags.length != 0">
 							<div>Tags</div>
 							<div class="tile-subtitle text-gray">
 								<span class="chip" v-for="tag in bouquet.tags" :key="tag">{{tag}}</span>
 							</div>
 						</div>
-						<div class="column col-4">
+						<div class="column col-6">
 							<div>Pack Size</div>
 							<p>{{bouquet.pack_size}}</p>
 						</div>
-						<div class="column col-4" v-if="bouquet.collections.length != 0">
+						<div class="column col-6" v-if="bouquet.divisions.length != 0">
+							<div>Divisions</div>
+							<div class="tile-subtitle text-gray">
+								<span class="chip c-hand" v-for="division in actualDivisions" :key="division.division_id" @click="$router.push('/divisions/' + division.division_id)">{{division.name}}</span>
+							</div>
+						</div>
+						<div class="column col-6" v-if="collections.length != 0">
 							<div>Collections</div>
 							<div class="tile-subtitle text-gray">
-								<span class="chip" v-for="collection in bouquet.collections" :key="collection">{{collection}}</span>
+								<span class="chip c-hand" v-for="collection in collections" :key="collection.collection_id" @click="$router.push('/collections/' + collection.collection_id)">{{collection.name}}</span>
 							</div>
 						</div>
 					</div>
@@ -157,6 +163,33 @@ export default {
 		},
 		selectedSrpInCart() {
 			return this.$store.getters.cart.srpIds.indexOf(this.bouquet.srps[this.selectedSrp].srp_id) != -1;
+		},
+		actualDivisions() {
+			var divisionIds = this.bouquet.divisions;
+			var divs = [];
+			for(var i = 0; i < divisionIds.length; i++) {
+				var division = this.$store.getters.division(divisionIds[i]);
+				if(division != null) {
+					divs.push(division);
+				}
+			}
+			return divs;
+		},
+		collections() {
+			var collections = [];
+			for(var i = 0; i < this.$store.getters.collections.length; i++) {
+				var collection = this.$store.getters.collections[i];
+				for(var j = 0; j < collection.collection_items.length; j++) {
+					var item = collection.collection_items[j];
+					if(item.bouquet_id == this.bouquetId) {
+						if(!collections.includes(collection)) {
+							collections.push(collection);
+							break;
+						}
+					}
+				}
+			}
+			return collections;
 		}
 	},
 	methods: {

@@ -1,4 +1,4 @@
-var db = require("../database/users");
+var db = require('../database/users');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 //const tokens = require('../tokens');

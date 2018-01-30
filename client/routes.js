@@ -15,6 +15,11 @@ import AddCollection from './components/Collections/AddCollection';
 import EditCollection from './components/Collections/EditCollection';
 import CollectionPage from './components/Collections/CollectionPage';
 
+import DivisionsList from './components/Divisions/DivisionsList';
+import AddDivision from './components/Divisions/AddDivision';
+import EditDivision from './components/Divisions/EditDivision';
+import DivisionPage from './components/Divisions/DivisionPage';
+
 var Routes = [
 	{ path: '', component: Homepage },
 
@@ -32,6 +37,12 @@ var Routes = [
 	{ path: '/collections/add', component: AddCollection },
 	{ path: '/collections/edit/:id', component: EditCollection },
 	{ path: '/collections/:id', component: CollectionPage },
+
+	{ path: '/divisions', component: DivisionsList },
+	{ path: '/divisions/add', component: AddDivision },
+	{ path: '/divisions/edit/:id', component: EditDivision },
+	{ path: '/divisions/:id', component: DivisionPage },
+
 ];
 
 export { Routes }

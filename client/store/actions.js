@@ -1,5 +1,6 @@
 import BouquetService from '../services/Bouquets';
 import CollectionService from '../services/Collections';
+import DivisionService from '../services/Divisions';
 
 export function updateBouquets({ commit }) {
 	return BouquetService.getBouquets().then(bouquets => {
@@ -17,6 +18,16 @@ export function updateBouquets({ commit }) {
 			bouquet.tags = bouquet.tags.length == 0 ? [] : bouquet.tags.split(',');
 			bouquet.collections = bouquet.collections.length == 0 ? [] : bouquet.collections.split(',');
 			bouquet.date_added = new Date(bouquet.date_added);
+
+			try {
+				bouquet.divisions = JSON.parse(bouquet.divisions);
+				if(!Array.isArray(bouquet.divisions)) {
+					bouquet.divisions = [];
+				}
+			} catch(e) {
+				bouquet.divisions = []
+			}
+
 			if(bouquet.image == '') {
 				bouquet.image = '/resource/genericflower.jpg';
 			}
@@ -24,11 +35,6 @@ export function updateBouquets({ commit }) {
 				bouquet.image = bouquet.image;					
 			}
 			
-			for(var j = 0; j < bouquet.collections.length; j++) {
-				if(bouquet.collections && bouquet.collections[j].length != 0 && uniqueCollections.indexOf(bouquet.collections[j]) == -1) {
-					uniqueCollections.push(bouquet.collections[j]);
-				}
-			}
 			for(var j = 0; j < bouquet.tags.length; j++) {
 				if(bouquet.tags && bouquet.tags[j].length != 0 && uniqueTags.indexOf(bouquet.tags[j]) == -1) {
 					uniqueTags.push(bouquet.tags[j]);
@@ -37,7 +43,7 @@ export function updateBouquets({ commit }) {
 		}
 		
 		commit('setSrps', srps);
-		commit('setBouquets', {bouquets, uniqueTags, uniqueCollections});
+		commit('setBouquets', {bouquets, uniqueTags});
 	});
 }
 
@@ -46,13 +52,19 @@ export function updateCollections({ commit }) {
 		for(var i = 0; i < collections.length; i++) {
 			var collection = collections[i];
 
-			console.log("collection: " + JSON.stringify(collection));
+			console.log("collection: " + collection.image);
 
-			if(collection.image == '') {
+			if(collection.image == '' || collection.image == null) {
 				collection.image = '/resource/defaultbanner.jpg';
 			}
 		}
 
 		commit('setCollections', collections);
 	})
+}
+
+export function updateDivisions({ commit }) {
+	return DivisionService.getDivisions().then(divisions => {
+		commit('setDivisions', divisions);
+	});
 }

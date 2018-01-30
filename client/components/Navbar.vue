@@ -12,6 +12,7 @@
 					<router-link to="/register" class="btn btn-link darkgreen">Register</router-link>    
 				</div>
 				<div v-if="isLoggedIn">
+					<router-link to="/divisions" class="darkgreen btn btn-link">Divisions</router-link>
 					<router-link to="/cart" class="darkgreen btn btn-link">Cart</router-link>
 					<router-link to="/profile" class="btn btn-link darkgreen">{{ user.name }}</router-link>    
 				</div>

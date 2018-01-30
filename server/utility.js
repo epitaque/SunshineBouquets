@@ -3,7 +3,16 @@ var path = require('path');
 
 module.exports.deleteImage = function (incompletePath) {
 	return new Promise((resolve, reject) => {
-		var url = path.join(__dirname, '../', incompletePath);
+		console.log("deleteImage incompletePath: " + incompletePath);
+
+		var url = '';
+
+		try {
+			url = path.join(__dirname, '../', incompletePath);
+		}
+		catch (err) {
+			resolve();
+		}
 
 		console.log("Attempting to delete image at path " + url);
 

@@ -27,6 +27,7 @@ module.exports.removeCollection = function (collectionId) {
 	return new Promise((resolve, reject) => {
 		con.query('DELETE FROM collections WHERE collection_id = ?', collectionId, function (error, reuslt) {
 			if (error) {
+				console.log("Error removing collection: " + error);
 				reject(error);
 			}
 			else {
@@ -48,7 +49,7 @@ module.exports.updateCollection = function (collection) {
 		}
 		con.query('UPDATE collections SET ? WHERE collection_id = ?', [collectionData, collection.collection_id], function (error, result) {
 			if (error) {
-				console.log('error editing collection: ' + JSON.stringify(error));
+				console.log('Error editing collection: ' + JSON.stringify(error));
 				reject(error);
 			} else {
 				console.log("Successfully edited collection " + collection.collection_id);
@@ -62,6 +63,7 @@ module.exports.getCollections = function () {
 	return new Promise((resolve, reject) => {
 		con.query('SELECT * FROM collections', function (error, rows) {
 			if (error) {
+				console.log("Error getting collections: " + error);
 				reject(error);
 			}
 			else {
@@ -73,6 +75,7 @@ module.exports.getCollections = function () {
 		return new Promise((resolve, reject) => {
 			con.query('SELECT * FROM collection_items', function (error, items) {
 				if(error) {
+					console.log("Error getting collections: " + error);
 					reject(error);
 				}
 				else {

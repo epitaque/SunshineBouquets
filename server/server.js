@@ -2,15 +2,18 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var users = require('./users');
 var cors = require('cors');
-var cookieParser = require('cookie-parser')
-var path = require("path");
+var cookieParser = require('cookie-parser');
+var path = require('path');
 var compression = require('compression')
 var db = require('./database/init'); db.init();
 var userDB = require('./database/users');
 var bouquetDB = require('./database/bouquets');
 var collectionsDB = require('./database/collections');
+var divisionsDB = require('./database/divisions');
 var bouquets = require('./api/bouquets');
 var collections = require('./api/collections');
+var divisions = require('./api/divisions');
+var email = require('./api/email');
 var auth = require('./api/auth');
 var upload = require('./upload-config');
 var app = express();
@@ -43,6 +46,12 @@ app.post('/api/collections/edit', 			auth.validate, upload.multer, collections.e
 app.post('/api/collections/editwithimage',	auth.validate, upload.multer, upload.bannerResizer, collections.editCollection);
 app.post('/api/collections/delete', 		auth.validate, collections.removeCollection);
 
+app.post('/api/divisions', auth.validate, divisions.getDivisions);
+app.post('/api/divisions/add', auth.validate, divisions.addDivision);
+app.post('/api/divisions/edit', auth.validate, divisions.editDivision);
+app.post('/api/divisions/delete', auth.validate, divisions.removeDivision);
+
+app.post('/api/cart/order', auth.validate, email.sendOrderEmails);
 
 app.get('/api/profile', auth.validate, (req, res) => { res.json({ user: req.decoded.name, email: req.decoded.email }); });
 

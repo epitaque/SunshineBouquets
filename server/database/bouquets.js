@@ -8,6 +8,7 @@ module.exports.addBouquet = function (bouquet) {
 			pack_size: bouquet.pack_size,
 			image: bouquet.image,
 			collections: bouquet.collections,
+			divisions: bouquet.divisions,
 			tags: bouquet.tags,
 			date_added: new Date()
 		};
@@ -57,6 +58,7 @@ module.exports.updateBouquet = function (bouquet) {
 			description: bouquet.description,
 			pack_size: bouquet.pack_size,
 			collections: bouquet.collections,
+			divisions: bouquet.divisions,
 			tags: bouquet.tags
 		};
 		if (bouquet.image != null) {

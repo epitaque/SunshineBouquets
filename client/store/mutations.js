@@ -20,17 +20,21 @@ export const removeSrpIdFromCart = (state, srpId) => {
 	state.cart.srpIds.splice(index, 1);
 }
 
-export const setBouquets = (state, {bouquets, uniqueTags, uniqueCollections}) => {
+export const setBouquets = (state, {bouquets, uniqueTags}) => {
 	//console.log("args: " + args);
 	//console.log("setBouquets args.uniqueTags: " + args['uniqueTags']);
 	Vue.set(state, 'bouquets', bouquets);
 	Vue.set(state, 'uniqueTags', uniqueTags);
-	Vue.set(state, 'uniqueCollections', uniqueCollections);	
 }
 
 export const setCollections = (state, collections) => {
 	Vue.set(state, 'collections', collections);
 }
+
+export const setDivisions = (state, divisions) => {
+	Vue.set(state, 'divisions', divisions);
+}
+
 
 export const setSrps = (state, srps) => {
 	Vue.set(state, 'srps', srps);

@@ -81,7 +81,7 @@ export default {
 				this.$store.commit('setUser', user);
 				console.log("retrieving user from state: " + JSON.stringify(this.$store.getters.getUser));
 				console.log("Successfully logged in, user " + JSON.stringify(user));
-				this.$router.push('profile')
+				this.$router.push('profile');
 			}).catch(err => {
 				this.loginError = err;
 				console.error("Error logging in: " + err);

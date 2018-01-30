@@ -19,7 +19,7 @@
 									<label class="form-label" for="s_srp">SRP</label>
 									<div class="input-group">
 										<span class="input-group-addon">$</span>
-										<input v-model="srp.srp" type="number" min="0" step="0.01" class="form-input" name="srp" id="s_srp" />
+										<input v-model="srp.srp" type="number" min="0.01" max="10000" step="0.01" class="form-input" name="srp" id="s_srp" />
 									</div>
 									<p v-show="errors.has('srp')" class="form-input-hint text-error">{{ errors.first('srp') }}</p>
 								</div>
@@ -69,7 +69,7 @@ export default {
 				srp.bouquet_id = this.bouquetId;
 				srp.imageFile = null;
 				srp.name = '';
-				srp.srp = 0;
+				srp.srp = 4.99;
 				srp.stems = 1;
 				srp.pictureRemoved = false;
 				srp.pictureChanged = false;

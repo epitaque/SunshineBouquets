@@ -1,17 +1,23 @@
 <template>
 	<div :class="rootClassString">
-		<div v-if="viewType=='card'">
+		<div v-if="viewType=='card'" @click="$router.push('/collections/' + collection.collection_id)">
 			<div class="card">
-				<div class="card-image">
-					<img :src="collection.image" class="img-responsive">
-				</div>
-				<div class="card-header">
-					<span class="toprow">
-						<router-link :to="'/collections/' + collection.collection_id"><h4 class="card-title h5">{{collection.name}}</h4></router-link>
-					</span>
-				</div>
-				<div class="card-body">
-					<p class="text-gray">{{collection.description}}</p>
+				<div class="columns">
+					<div class="column col-2">
+						<div class="card-header">
+							<span class="toprow">
+								<h4 class="card-title h5">{{collection.name}}</h4>
+							</span>
+						</div>
+						<div class="card-body">
+							<p class="text-gray">{{collection.description}}</p>
+						</div>
+					</div>
+					<div class="column col-10">
+						<div class="card-image">
+							<img :src="collection.image" class="img-responsive">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,7 +70,7 @@ export default {
 		},
 		rootClassString() {
 			if(this.viewType == 'card') {
-				return 'column col-3 col-md-4 col-sm-6 col-xs-12 bouquetroot';
+				return 'column col-12 bouquetroot c-hand';
 			}
 			if(this.viewType == 'cart') {
 				return 'col-12 bouquetroot';
