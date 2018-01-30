@@ -14,13 +14,13 @@ module.exports.sendOrderEmails = function(req, res) {
 	// also each srp has to have a list of emails attached to it
 	// then for each unique email, build a list of associated srps and send
 	
-	var cartItems = [];
+	//var cartItems = [];
 
 	var promises = [];
 	for(var i = 0; i < order.srpIds.length; i++) {
 		var cartItem = {};
-		cartItems.push(cartItem);
-		promises.push(bouquetsDb.getSrp(order.srpIds[i])
+		//cartItems.push(cartItem);
+		var promise = bouquetsDb.getSrp(order.srpIds[i])
 		.then(dbSrp => {
 			cartItem.dbSrp = dbSrp;
 			return;
@@ -28,7 +28,7 @@ module.exports.sendOrderEmails = function(req, res) {
 		.then(dbBouquet => {
 			cartItem.dbBouquet = dbBouquet;	
 		}).then(_ => {
-			console.log("bouquet divisions: " + cartItem.dbBouquet.divisions);
+			//console.log("bouquet divisions: " + cartItem.dbBouquet.divisions);
 			var divisions = JSON.parse(cartItem.dbBouquet.divisions);
 			var promises2 = [];
 			for(var i = 0; i < divisions.length; i++) {
@@ -36,16 +36,19 @@ module.exports.sendOrderEmails = function(req, res) {
 			}
 			return Promise.all(promises2);
 		}).then(dbDivisions => {
-			console.log("Got here... dbDivisions: " + JSON.stringify(dbDivisions));
-			console.log("Cart items: " + JSON.stringify(cartItems));
+			//console.log("Got here... dbDivisions: " + JSON.stringify(dbDivisions));
 			cartItem.dbDivisions = dbDivisions;
-			return cartItems[i];
-		}));
+			var str = JSON.stringify(cartItem);
+			console.log("Returning cartItem: " + str);
+
+			return cartItem;
+		});
+		promises.push(promise);
 	}
 
 	Promise.all(promises).then(cartItems => {
 		var emails = {};
-		console.log("Cart items: " + JSON.stringify(cartItems));
+		console.log("Cart items 2: " + JSON.stringify(cartItems));
 
 		// build list of unique emails
 		for(var i = 0; i < cartItems.length; i++) {
@@ -53,7 +56,8 @@ module.exports.sendOrderEmails = function(req, res) {
 			cartItem.uniqueEmails = [];
 			for(var j = 0; j <= cartItem.dbDivisions.length; j++) {
 				var division = cartItem.dbDivisions[j];
-				for(var f = 0; f < division.division_items.length; f++) {
+				console.log("Division: " + JSON.stringify(division));
+				for(var f = 0; division != null && f < division.division_items.length; f++) {
 					var email = division.division_items[f].email;
 					if(!emails[email]) {
 						emails[email] = [];
@@ -71,12 +75,13 @@ module.exports.sendOrderEmails = function(req, res) {
 				emails[email].push(cartItem);
 			}
 		}
-
+		
+		console.log("Sending email...");
 		sendEmail(JSON.stringify(emails));
 		res.sendStatus(200);
 	
 		for(var email in emails) {
-			var cartItems = emails[email];
+			var emailCartItems = emails[email];
 
 			
 		}

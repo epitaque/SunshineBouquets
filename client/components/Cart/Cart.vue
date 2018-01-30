@@ -11,11 +11,10 @@
 			</div>
 
 			<div class="form-group">
-				<button type="button" class="btn btn-primary" @click="sendOrderEmail"><i class="icon icon icon-mail"></i> Send Order Email</button>
+				<button type="button" class="btn btn-primary" :class="submitting ? 'loading disabled' : ''" @click="sendOrderEmail"><i class="icon icon icon-mail"></i> Send Order Email</button>
 			</div>
 		</div>
 		<p class="text-error">{{ submitError }} </p>
-		<div v-if="submitting" class="loading loading-lg"></div>
 
 		<p class="text-large text-gray text-center" v-if="user != null && srpIds.length == 0"> 
 			Your cart is empty. Try adding some <router-link to="/bouquets">bouquets</router-link>.
