@@ -55,6 +55,13 @@ app.post('/api/cart/order', auth.validate, email.sendOrderEmails);
 
 app.get('/api/profile', auth.validate, (req, res) => { res.json({ user: req.decoded.name, email: req.decoded.email }); });
 
+var pug = require('pug');
+app.get('/testPage', (req, res) => {
+	const compiledFunction = pug.compileFile(path.join(__dirname, './emails/order/test.pug'));
+	var content = compiledFunction({name: 'Brian'});
+	res.send(content);
+});
+
 app.use('/dist', express.static(path.join(__dirname, '../dist'))); 
 app.use('/resource', express.static(path.join(__dirname, '../resource')));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

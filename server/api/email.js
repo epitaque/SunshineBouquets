@@ -90,8 +90,18 @@ module.exports.sendOrderEmails = function(req, res) {
 }
 
 var nodemailer = require('nodemailer');
+var pug = require('pug');
 
-function sendEmail(content) {
+var path = require('path');
+
+function sendEmail(data) {
+	const compiledFunction = pug.compileFile(path.join(__dirname, '../emails/order/test.pug'));
+
+	var content = compiledFunction({name: 'Brian'});
+
+	console.log("Compiled Email Content:"); console.log(" ");
+	console.log(content);
+
 	let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -107,8 +117,7 @@ function sendEmail(content) {
         from: '"Brian Hoy" <brianhoy@sunshinebouquets.com>', // sender address
         to: 'epitaquee@gmail.com', // list of receivers
         subject: 'Sunshine Bouquets Order', // Subject line
-        text: content, // plain text body
-        html: '' // html body
+		html: content // html body
     };
 
     // send mail with defined transport object
