@@ -1,10 +1,10 @@
 <template>
     <div>
         <header class="navbar">
-            <section class="navbar-section">
+            <section class="navbar-section" style="flex-grow:1">
                 <img width="150" src="/resource/logo.png">
             </section>
-			<section class="navbar-section">
+			<section class="navbar-section" style="flex-grow:3;">
 				<router-link to="/collections" class="btn btn-link darkgreen">Collections</router-link>
                 <router-link to="/bouquets" class="darkgreen btn btn-link">Bouquets</router-link>
                 <div v-show="!isLoggedIn">
