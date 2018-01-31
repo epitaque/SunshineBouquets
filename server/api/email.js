@@ -76,14 +76,14 @@ module.exports.sendOrderEmails = function(req, res) {
 			}
 		}
 		
-		console.log("Sending email...");
-		sendEmail(JSON.stringify(emails));
+		console.log("Sending email... Data: " + JSON.stringify(emails));
+		//sendEmail(JSON.stringify(emails));
 		res.sendStatus(200);
 	
 		for(var email in emails) {
+			emails[email].email = email;
 			var emailCartItems = emails[email];
 
-			
 		}
 
 	});

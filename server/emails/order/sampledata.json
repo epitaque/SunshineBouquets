@@ -1,0 +1,106 @@
+{
+    "brianhoy4@gmail.com": {
+        "email": "brianhoy4@gmail.com",
+        "name": "Brian Hoy",
+        "note": "This is a test note..."
+        "cartItems": [
+            {
+                "image": "\\uploads\\images\\986977142.png",
+                "dbSrp": {
+                    "srp_id": 2,
+                    "bouquet_id": 1,
+                    "image": "\\uploads\\images\\986977142.png",
+                    "name": "Premium",
+                    "srp": 9.99,
+                    "stems": 12,
+                    "date_added": "2018-01-30T16:52:34.000Z"
+                },
+                "dbBouquet": {
+                    "bouquet_id": 1,
+                    "name": "Test Bouquet 1",
+                    "description": null,
+                    "pack_size": 4,
+                    "image": "\\uploads\\images\\529921005.png",
+                    "divisions": "[1]",
+                    "collections": "",
+                    "tags": "awesome,fun",
+                    "date_added": "2018-01-30T16:52:34.000Z"
+                },
+                "dbDivisions": [
+                    {
+                        "division_id": 1,
+                        "name": "Division 1",
+                        "date_added": "2018-01-30T17:00:46.000Z",
+                        "division_items": [
+                            {
+                                "division_item_id": 1,
+                                "division_id": 1,
+                                "email": "epitaquee@gmail.com",
+                                "date_added": "2018-01-30T17:01:06.000Z"
+                            },
+                            {
+                                "division_item_id": 2,
+                                "division_id": 1,
+                                "email": "brianhoy4@gmail.com",
+                                "date_added": "2018-01-30T17:01:06.000Z"
+                            }
+                        ]
+                    }
+                ],
+                "uniqueEmails": [
+                    "epitaquee@gmail.com",
+                    "brianhoy4@gmail.com"
+                ],
+                "uniqueEmailsString": "epitaquee@gmail.com, brianhoy4@gmail.com"
+                
+            },
+            {
+                "dbSrp": {
+                    "srp_id": 2,
+                    "bouquet_id": 1,
+                    "image": "\\uploads\\images\\986977142.png",
+                    "name": "Premium",
+                    "srp": 9.99,
+                    "stems": 12,
+                    "date_added": "2018-01-30T16:52:34.000Z"
+                },
+                "dbBouquet": {
+                    "bouquet_id": 1,
+                    "name": "Test Bouquet 1",
+                    "description": null,
+                    "pack_size": 4,
+                    "image": "\\uploads\\images\\529921005.png",
+                    "divisions": "[1]",
+                    "collections": "",
+                    "tags": "awesome,fun",
+                    "date_added": "2018-01-30T16:52:34.000Z"
+                },
+                "dbDivisions": [
+                    {
+                        "division_id": 1,
+                        "name": "Division 1",
+                        "date_added": "2018-01-30T17:00:46.000Z",
+                        "division_items": [
+                            {
+                                "division_item_id": 1,
+                                "division_id": 1,
+                                "email": "epitaquee@gmail.com",
+                                "date_added": "2018-01-30T17:01:06.000Z"
+                            },
+                            {
+                                "division_item_id": 2,
+                                "division_id": 1,
+                                "email": "brianhoy4@gmail.com",
+                                "date_added": "2018-01-30T17:01:06.000Z"
+                            }
+                        ]
+                    }
+                ],
+                "uniqueEmails": [
+                    "epitaquee@gmail.com",
+                    "brianhoy4@gmail.com"
+                ]
+            }
+        ]
+    }
+}
